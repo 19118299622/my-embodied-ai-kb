@@ -1,0 +1,33 @@
+# Project inventory
+
+- `.gitattributes`
+- `.gitignore`
+- `AGENTS.md`
+- `CHANGELOG.md`
+- `MIGRATION_BACKLOG.md`
+- `README.md`
+- `RESEARCH_MAP.md`
+- `assets/`
+- `assets/README.md`
+- `docs/`
+- `docs/01_foundations/`
+- `docs/01_foundations/README.md`
+- `docs/02_topics/`
+- `docs/02_topics/README.md`
+- `docs/02_topics/vla_runtime_verification_online_learning/`
+- `docs/02_topics/vla_runtime_verification_online_learning/2026-07-31_VLA实时控制执行验证与在线学习.md`
+- `docs/03_papers/`
+- `docs/03_papers/README.md`
+- `docs/04_experiments/`
+- `docs/04_experiments/README.md`
+- `docs/05_ideas/`
+- `docs/05_ideas/README.md`
+- `docs/06_reports/`
+- `docs/06_reports/README.md`
+- `templates/`
+- `templates/EXPERIMENT_TEMPLATE.md`
+- `templates/LEARNING_PLAN_TEMPLATE.md`
+- `templates/LONG_TERM_NOTES_TEMPLATE.md`
+- `templates/PAPER_NOTE_TEMPLATE.md`
+- `templates/RESEARCH_QUESTION_TEMPLATE.md`
+- `templates/TOPIC_TEMPLATE.md`

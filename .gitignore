@@ -1,0 +1,48 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Obsidian local state
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+
+# Python / notebooks
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+
+# Temporary and generated files
+tmp/
+temp/
+cache/
+artifacts/
+outputs/
+*.tmp
+*.bak
+*.log
+
+# Large ML assets
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.onnx
+*.engine
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.7z
