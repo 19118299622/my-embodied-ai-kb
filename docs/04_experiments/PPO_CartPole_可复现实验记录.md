@@ -90,7 +90,7 @@ tags:
 
 ## 关联文档
 
-- 基础笔记：[`../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md`](../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md)（第 4 讲 PPO 精解，已锚定本实验超参）
+- 基础笔记：[`../../kb/machine-learning/reinforcement-learning/长期学习笔记.md`](../../kb/machine-learning/reinforcement-learning/长期学习笔记.md)（第 4 讲 PPO 精解，已锚定本实验超参）
 - VLA 后训练脉络：[`../../03_papers/ript_vla/RIPT-VLA_阅读笔记.md`](../../03_papers/ript_vla/RIPT-VLA_阅读笔记.md)
 
 ## 更新记录

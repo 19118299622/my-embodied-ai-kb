@@ -9,10 +9,11 @@
 
 ## 当前阶段
 
-- **V2 MVP — Pilot 1：强化学习 Living Documents 真实迁移（已执行 / 待审）**
-- 已从最新 `main` 新建分支 `v2/pilot-rl-living-docs`，将 V1 `docs/01_foundations/reinforcement_learning/` 双文档作为已确认 canonical Living Document **真实迁移**至 `kb/machine-learning/reinforcement-learning/`（Git rename，不保留第二份副本）；本轮刻意未创建 `_map.md`、未迁移其它 `docs/` 内容、未注入额外 stable id。
-- **`_map.md` 不是目录模板**：只有当某个 Topic 已形成值得长期表达的独立认知结构时，才在该目录创建 `_map.md`；本轮 Pilot 不创建地图。
+- **V2 MVP — Pilot 1：强化学习 Living Documents 真实迁移已完成**
+- 本 Pilot 已验证：V1 `docs/01_foundations/reinforcement_learning/` 双文档作为已确认 canonical Living Document 的**真实迁移**（Git rename，不保留第二份副本）至 `kb/machine-learning/reinforcement-learning/`；配套完成 stable id 分配、V2 最小 Front Matter 转换、必要相对链接修复与当前有效入口更新。
+- **`_map.md` 不是目录模板**：只有当某个 Topic 已形成值得长期表达的独立认知结构时，才在该目录创建 `_map.md`；本 Pilot 不创建地图。
 - 尚未进入：其它 `docs/` 知识迁移、完整 Nightly 自动化、任何复杂基础设施。
+- **下一步**：等待用户确认本次迁移结果，准备下一 Pilot（下一 Pilot 的具体范围由用户确认，不在此预定义）。
 
 ## 当前活跃主题
 
