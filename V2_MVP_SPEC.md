@@ -91,6 +91,7 @@ tags:
 - 当当前研究引用到某条旧知识、或用户明确要求时，才检查其是否仍然准确、提炼稳定结论、迁入新结构；
 - 迁移动作以最小事务进行，不批量重排 `docs/`；
 - 迁移过程中保留来源说明，必要时在原材料中标注迁移去向；
+- **「真实迁移」的含义**：指 canonical 知识文件**实际移动到**新的 Domain / Area / Topic 结构，并更新必要链接；**不因为迁移而长期保留一份 V1 canonical 副本**。旧路径 / 旧版本由 **Git history** 保存；除非未来有明确需求，否则**不建立重复副本或复杂 redirect 系统**。
 - `MIGRATION_BACKLOG.md` / `MIGRATION_CHECKLIST.md` 仍作为历史材料渐进迁移清单保留（与本轮结构升级是两条独立线）。
 
 ---
@@ -112,7 +113,7 @@ updated: YYYY-MM-DD
 
 - 按需增加：`sources:`（来源引用）、`read_at:`（阅读/精读时间）等。
 - **`kind` 只承担 Writing Rules 路由**，不决定目录结构。
-- 首版 `kind` 包含以下**实际使用的类型**（非闭集，按需扩展）：
+- 首版 `kind` 采用**当前 MVP 的轻量受控集合**（以下 9 个足够首版使用）：
   - `learning-plan`（学习规划与进度）
   - `learning-note`（长期学习笔记）
   - `paper-summary`（受约束的论文快速总结，Agent 生成、未验证）
@@ -122,6 +123,7 @@ updated: YYYY-MM-DD
   - `idea`（研究想法）
   - `report`（阶段报告/汇报）
   - `map`（认知结构地图 `_map.md`）
+- **`kind` 为受控集合，非自由扩展**：若出现现有 `kind` 无法合理表达的真实需求，Agent **只能在聊天报告中提出新增建议**；新增 `kind` **须经用户确认并记录到 `DECISIONS.md`**，**不引入 schema YAML** 来管控取值。
 - **`id` 是稳定身份标识，作为第一版主要身份机制**（不使用 uid / identity_key / 多层信任级联等重型身份体系，见 §15）。
 
 ---
@@ -145,12 +147,13 @@ updated: YYYY-MM-DD
   - 身份（稳定 key）；
   - arXiv / DOI；
   - 最新版本号；
-  - 发布时间；
-  - 加入时间；
+  - `published_at`：论文**首次发布**时间；
+  - `version_published_at`：当前所选版本的**版本发布**时间；
+  - `added_at`：该论文被知识库**摄入**的时间；
   - PDF 路径；
-  - 可靠获得时的 `authors` / `venue` / `code` 信息。
+  - `authors` / `venue` / `code` 等**可选信息**：仅在可靠获得时记录，**不扩展为复杂的 Source registry**。
 - **同篇论文当前工作树只保留最新 PDF**；旧版本由 **Git history** 保存，不额外保留多份。
-- Agent 对 Source 层**只登记、不加工**原始内容（如不对 PPTX 做内容解析）。
+- **Source 原始文件不可被 Agent 改写**（论文 PDF、资料原文件保持只读）；但 Agent **可以读取 / 解析 Source、提取可靠 metadata**（如从 PDF 抽取标题、作者、arXiv / DOI、版本号），并**基于论文原文生成受约束的 Knowledge 文档或 `paper-summary`**（见 §8）。此读取 / 解析 / 生成能力不与「不加工原始内容」冲突——被保护的是 **Source 原始文件本身不被改写**，而非禁止 Agent 从中提取信息与产出 Knowledge。
 
 ---
 
@@ -161,6 +164,7 @@ updated: YYYY-MM-DD
   - 用户**明确要求**；
   - 或该论文与 `STATE.md` 中**活跃主题高度明确相关**。
 - 生成的 `paper-summary` **必须标记 `Agent-generated` / `user-unverified`**（明确未经验证）。
+- **该声明是人类可读的谨慎标注**，仅用于提醒读者此文档尚未经用户精读验证；**这不意味着重新引入全局 `knowledge_status` 状态模型**（见 §15）。
 - **同一文件随用户精读演化成 `paper-note`**：同一篇论文只维护一个 Markdown 文件，从 `paper-summary` 自然成长为 `paper-note`，**不得另建重复笔记**。
 
 ---
@@ -182,15 +186,15 @@ updated: YYYY-MM-DD
 
 Agent 对 `_map.md` 的权限：
 
-- ✅ 可填充已有 Map 中空缺的内容；
+- ✅ 可自动维护已有结构中的**事实型、低风险内容**：明确导航信息、横向链接、代表工作清单等；
 - ✅ 可补齐明确导航与横向链接；
+- ❌ **不允许仅因为某章节为空就补写认知内容**（如「当前判断」「开放问题」「关键关系」等需要判断或理解的内容）；
 - ❌ **未经用户确认，不得**：
   - 新建 / 拆分 / 合并重要知识节点；
   - 改变认知框架；
   - 重写「当前判断」；
   - 编造「认知演化」。
-
-认知演化必须来自真实历史（Git history、既有记录），不可虚构。
+- **「认知演化」写入条件**：只有当**用户已经明确表达或确认认知变化**时，才能正式写入 `认知演化`；Git history / 既有记录**只能作为证据**，不能单独授权 Agent 推断用户认知变化；若 Agent 发现疑似认知转折，只能在**聊天报告中建议**，由用户决定是否写入。
 
 ---
 
@@ -200,6 +204,8 @@ Relation MVP **只使用 Markdown 的「相关知识 / 相关主题」段落及�
 
 - **不实施**完整 relation ontology、受控关系词表、机器可读 graph、全局图谱。
 - 横向关系通过文档内「相关主题 / 相关知识」列表 + 自然语言说明表达，辅以明确的链接（见 §11）。
+- **普通知识文档不强制创建「相关知识 / 相关主题」章节**，不制造空章节；章节按语义使用（见 §9 的填空约束）。
+- 对**已经明确存在的重要关系**，Agent 可以补充带有自然语言说明的**双向链接**；但**不得为了丰富图结构而自动推断弱关系**。
 
 ---
 
@@ -223,10 +229,10 @@ Relation MVP **只使用 Markdown 的「相关知识 / 相关主题」段落及�
 | 文件 | 职责 |
 |---|---|
 | `README.md` | **人类 HOME**：项目入口、当前重点、目录导航 |
-| `AGENTS.md` | **Agent 永久行为边界**：维护规则、写作规范、Git 约束（长期不变） |
-| `DECISIONS.md` | **已确认长期选择**：记录经过确认的方向性/架构性决策 |
+| `AGENTS.md` | **Agent 持久行为边界**：仅负责持久的行为边界、权限红线与 Git 安全约束；**不含写作规范**（写作规范归 `WRITING_RULES.md`）。该边界持久 / 稳定，但**经用户确认可演化** |
+| `DECISIONS.md` | **已确认长期选择**：记录经过确认的方向性/架构性决策（持久 / 稳定，经用户确认可演化） |
 | `WORKFLOW.md` | **每次 inbox curation 动作**：定义白天投放 → 夜间策展的具体步骤 |
-| `WRITING_RULES.md` | **文档输出规则**：按语义/kind/任务选择性应用（见 §13） |
+| `WRITING_RULES.md` | **正式文档输出规范入口**：写作规则的唯一权威真源。当前 `README.md` / `AGENTS.md` 中的写作约定**仅作为未来建立本文件时的迁移来源**，不得继续作为并列规范真源 |
 | `STATE.md` | **仅保存轻量当前状态**：当前阶段、活跃主题、持续维护文档、当前迁移重点 |
 
 `STATE.md` 只承载**易变、轻量**的当前状态，不存放长期规则或知识正文。
@@ -235,7 +241,7 @@ Relation MVP **只使用 Markdown 的「相关知识 / 相关主题」段落及�
 
 ## 13. Markdown 写作规则继承
 
-Markdown 写作规则**正式继承现有约定**（以当前 `README.md` / `AGENTS.md` 中的规范为准），包括：
+Markdown 写作规则的**正式权威真源为 `WRITING_RULES.md`**（协议栈见 §12）。当前 `README.md` / `AGENTS.md` 中已有的写作约定**只作为未来建立 `WRITING_RULES.md` 时的迁移来源**，**不能继续作为与 `WRITING_RULES.md` 并列的规范真源**；在 `WRITING_RULES.md` 建立前，这些既有约定作为临时参考沿用，但任何新建的 `WRITING_RULES.md` 条款优先。继承的约定包括：
 
 - **公式**：行内 `$...$`、块 `$$...$$`（兼容标准 Markdown 的 LaTeX）；
 - **术语**：首次出现使用「中文名称（英文全称，必要时缩写）」，后文方用缩写；
@@ -258,6 +264,26 @@ Markdown 写作规则**正式继承现有约定**（以当前 `README.md` / `AGE
   > 「按仓库 `AGENTS.md` / `WORKFLOW.md` 执行 nightly knowledge curation」
 - Agent 可以在 **nightly branch** 上提交（commit）本次策展结果；
 - **第一版绝不自动 merge main**：nightly 分支只作为待用户审阅的工作分支，合并动作由用户执行。
+
+### 14.1 Nightly Agent 读取顺序
+
+每次 nightly 触发时，Agent 按以下顺序读取协议栈：
+
+1. `AGENTS.md`（行为边界、权限红线、Git 安全约束）；
+2. `STATE.md`（当前阶段、活跃主题、持续维护文档、迁移重点）；
+3. `DECISIONS.md`（已确认长期选择）；
+4. `WORKFLOW.md`（本次 inbox curation 动作步骤）；
+5. 扫描 `inbox/`；
+6. 根据实际任务**按需读取** `WRITING_RULES.md`（文档输出规范）。
+
+### 14.2 规则冲突优先级
+
+当不同协议文件出现冲突时，按以下优先级裁定（从高到低）：
+
+> **用户本次明确指令 > `AGENTS.md` > `DECISIONS.md` > `WORKFLOW.md` > `WRITING_RULES.md` > `STATE.md` 的运行时上下文**
+
+- `STATE.md` 仅提供**运行时上下文**（当前阶段 / 主题 / 重点），**绝不能覆盖更高层的安全规则**（尤其 `AGENTS.md` 的权限红线与 Git 安全约束）。
+- 用户在当次聊天中的明确指令优先级最高。
 
 ---
 
@@ -301,3 +327,4 @@ Markdown 写作规则**正式继承现有约定**（以当前 `README.md` / `AGE
 ## 17. 更新记录
 
 - 2026-08-07：初始创建。将重新对齐后的轻量 V2 MVP 需求基线固化；对三篇旧设计文档做最小 authority 重定位（冲突以本文件为准，M0–M7 标记 superseded）。本轮仅做需求收敛，不进入实现。
+- 2026-08-07（协议收尾）：对独立审查指出的 9 处歧义做最小修正——①Source 原始文件只读但允许读取/解析/提取 metadata 并产出 Knowledge/paper-summary；②`_map.md` 收紧为仅自动维护事实型低风险内容、认知演化须用户明确表达/确认、疑似转折仅建议；③AGENTS 只管持久行为边界/权限红线/Git 安全（不含写作规范）、WRITING_RULES 为唯一权威真源、README/AGENTS 既有约定仅作迁移来源、「长期不变」改「持久可演化」；④补入 Nightly 读取顺序与冲突优先级（STATE 仅上下文、不覆盖高层安全规则）；⑤Relation MVP 不强制空章节、不自动推断弱关系；⑥kind 改为轻量受控集合、新增须用户确认入 DECISIONS；⑦papers.yaml 区分 published_at/version_published_at/added_at、可选字段不扩 registry；⑧明确「真实迁移」= 实际移动 canonical 文件、不长期保留 V1 副本；⑨paper-summary 标注不重新引入 knowledge_status。本轮仍只改规格，未进入实现。
