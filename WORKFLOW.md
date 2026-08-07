@@ -56,9 +56,12 @@
 - 判断该材料与现有知识的关系（补写 / 新建 / 更新）；
 - 找不到可靠归属时，归入 Ambiguous。
 
-### 3.5 何时允许移动 / 归档
+### 3.5 何时允许移动 / 归档（结构权限）
 
-- **允许**：材料语义清晰、可归入既有的明确主题或新建一个低风险的明确主题；
+- **允许**：材料语义清晰，可归入**已经确认的** Domain / Area / Topic 结构内部；Agent 可以在该结构内部创建或归档**普通知识文件**。
+- **禁止自行新建层级**：Agent **不得**新建 Domain、重要 Area、重要 Topic 层级，**不得**改变已有层级关系。
+- **全新类别**：若新材料显然构成一个当前结构尚不存在的新类别，应**原样留在 `inbox/`**，并在聊天报告中建议建立新 Topic，等待用户确认。
+- **显式授权**：只有在**本次用户指令显式授权**创建某个结构时，Agent 才可创建对应层级。
 - **移动后**：更新必要导航 / 链接（如对应 `_map.md` 的“代表工作 / 相关主题”）；
 - **Front Matter**：按 [`WRITING_RULES.md`](./WRITING_RULES.md) 填写极简字段（`id` / `title` / `kind` / `domain` / `created` / `updated`）。
 
@@ -72,9 +75,14 @@
 
 - 论文 PDF **只读**：原始 PDF 文件**不可被内容级改写**；
 - PDF 放入 `sources/papers/`，由 `.gitattributes` 自动走 **Git LFS**；
-- 在 `sources/papers.yaml` 登记：稳定 `source id`、正式 `title`、arXiv / DOI（有则）、`latest version`、`published_at`、`version_published_at`、`added_at`、`pdf` 路径，以及可靠获得时的 `authors` / `venue` / `code`；
+- 在 `sources/papers.yaml` 登记（字段契约见该文件头注释）：`id` / `title` / `added_at` / `pdf` 为始终必需；arXiv / DOI、`published_at`、`latest_version`、`version_published_at`、可选 `authors` / `venue` / `code` 仅在适用且可靠获得时记录，不知道就省略而非猜；
+- **能可靠确认是独立新论文**：正常登记可靠获得的字段，未知可选字段省略，不新增「待确认」占位；
 - **Source version update（唯一允许的 PDF 替换）**：仅当**可靠确认**「同一篇论文且新版本高于当前」时，用新官方 Source 文件替换当前 canonical PDF，并更新 `papers.yaml` 的版本与时间字段；旧版本由 Git history 保存；
-- **无法可靠确认同篇 / 版本时，绝不替换**当前 PDF，材料留在 `inbox/` 或作为新条目登记并标注待确认。
+- **无法可靠确认同篇 / 版本时**：
+  - **绝不替换**当前 canonical Source；
+  - **绝不新增「待确认」registry 条目**；
+  - 统一**保留在 `inbox/`** 并在报告中说明，交由用户判断。
+- **动态 metadata 核验顺序**（工具 / 网络可用时）：论文页 / arXiv / DOI → 作者项目主页 → 作者或机构官方 GitHub → 官方文档。不得仅根据仓库名称相似度猜测「官方代码」；无法可靠确认的可选字段省略或在报告中说明，不制造确定事实。
 
 ### 3.8 生成 `paper-summary`（受约束）
 
@@ -117,7 +125,7 @@
 ## 4. 分类决策要点
 
 - **能可靠归类 → 移动 / 归档**；**不能 → 留 `inbox/`**。
-- **新主题**：仅在语义清晰、且与现有主题确有区分时新建；不为了“看起来完整”拆分。
+- **新主题**：Agent 不得自行新建 Domain / 重要 Area / 重要 Topic；新材料若显然形成当前结构尚不存在的新类别，留在 `inbox/` 并在报告中建议，等待用户确认（见 §3.5）。
 - **已有文档更新**：优先增量补写；明显对应某文档的 material 才视为 Living Document update。
 - **论文**：先判 Source 登记，再判是否需要 `paper-summary`（§3.8）。
 

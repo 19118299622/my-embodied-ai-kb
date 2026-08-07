@@ -1,20 +1,27 @@
 # sources/papers.yaml — 轻量论文 Source registry（V2 MVP）
 #
-# 每条记录字段（除 id / title / pdf 外均为可选）：
-#   id:                   稳定 source id（字符串，仓库内唯一）
-#   title:                论文正式标题
-#   arxiv:                arXiv 编号（有则记录，如 "2507.04447"）
-#   doi:                  DOI（有则记录）
-#   latest_version:       当前所选版本号（如 "v3"）
-#   published_at:         论文首次发布日期 (YYYY-MM-DD)
-#   version_published_at: 当前版本发布日期 (YYYY-MM-DD)
-#   added_at:             被知识库摄入日期 (YYYY-MM-DD)
-#   pdf:                  相对于仓库根的 PDF 路径（sources/papers/ 下，走 Git LFS）
-#   authors:              [可选] 可靠获得时记录
-#   venue:                [可选] 可靠获得时记录
-#   code:                 [可选] 可靠获得时记录（官方代码链接）
+# 字段契约（轻量、按需，不引入 schema / sidecar / 额外 registry 文件）：
 #
-# 不扩展为复杂 Source registry；可选字段仅在可靠获得时填写。
+# 始终必需字段：
+#   id:          稳定 source id（字符串，仓库内唯一）
+#   title:       论文正式标题
+#   added_at:    被知识库摄入日期 (YYYY-MM-DD)
+#   pdf:         相对于仓库根的 PDF 路径（sources/papers/ 下，走 Git LFS）
+#
+# 可选字段（适用且可靠获得时记录；不知道就省略，而非猜）：
+#   arxiv:               arXiv 编号（如 "2507.04447"）
+#   doi:                 DOI
+#   published_at:        论文首次发布日期 (YYYY-MM-DD)
+#   latest_version:      当前所选版本号（如 "v3"）
+#   version_published_at: 当前版本发布日期 (YYYY-MM-DD)
+#   authors:             [可靠获得时]
+#   venue:               [可靠获得时]
+#
+# code（最小结构，区分三种状态）：
+#   code: { available: true, url: "<官方代码链接>" }   # 已确认有官方代码
+#   code: { available: false }                          # 已确认无官方开源代码
+#   （字段整体省略）                                      # 尚未可靠核验
+#
 # 同篇论文当前工作树只保留最新 PDF，旧版本由 Git history 保存。
 
 papers: []

@@ -69,6 +69,12 @@ updated: YYYY-MM-DD
 - `kind` 只承担写作规则路由，**不决定目录结构**；
 - `id` 是稳定身份标识（[`DECISIONS.md`](./DECISIONS.md) D-004）。
 
+### 1.6 Source → Knowledge 溯源（论文类强制）
+
+- **`paper-summary` 与 `paper-note` 的 Front Matter 必须包含 `sources:`**，且至少引用 `sources/papers.yaml` 中一个**稳定 `source id`**；普通文档的 `sources` 仍按需。
+- **`read_at` 表示用户实际阅读 / 精读时间**：Agent 自动读取 PDF 并生成 `paper-summary` 时**不得**写 `read_at`，只有用户真实参与阅读后才设置。
+- 从 `paper-summary` 演化成 `paper-note` 时**保留原文档 `id` 与 `sources`**，不在二者间另建重复文件（[`DECISIONS.md`](./DECISIONS.md) D-010）。
+
 ---
 
 ## 2. `kind` 专项规则（指导新文档，非强制 checklist）
@@ -92,12 +98,14 @@ updated: YYYY-MM-DD
 ### 2.3 `paper-summary`（受约束论文快速总结）
 
 - 必须标记 **`Agent-generated` / `user-unverified`**；
+- **Front Matter 必须包含 `sources:`**，指向 `sources/papers.yaml` 中对应论文的稳定 `source id`（见 §1.6）；Agent 生成时**不写 `read_at`**；
 - 核心问题、方法概览、主要结果、局限；
 - **不得写成用户个人判断**；
-- 同一篇论文只此一个文件，未来演化为 `paper-note`（[`DECISIONS.md`](./DECISIONS.md) D-010）。
+- 同一篇论文只此一个文件，保留 `id` 与 `sources`，未来演化为 `paper-note`（[`DECISIONS.md`](./DECISIONS.md) D-010）。
 
 ### 2.4 `paper-note`（用户精读后的论文笔记）
 
+- 从 `paper-summary` 演化而来时，**保留原文档 `id` 与 `sources`（见 §1.6）**；
 - 基本信息（论文 / 作者 / 时间 / 链接 / 代码 / 开源状态 / 核验日期）；
 - 一句话定位、核心问题、方法概览、数学形式、实验与结果、特色贡献；
 - 与已有工作的关系、局限、对当前研究的参考价值；

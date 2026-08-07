@@ -14,16 +14,7 @@
 
 ## 2. 开始任务前
 
-每次进入项目或开始一次 curation，先按 [`WORKFLOW.md`](./WORKFLOW.md) 定义的读取顺序加载协议栈并扫描 `inbox/`：
-
-1. 阅读 [`AGENTS.md`](./AGENTS.md)（本文件，行为边界）；
-2. 阅读 [`STATE.md`](./STATE.md)（当前阶段、活跃主题、迁移重点）；
-3. 阅读 [`DECISIONS.md`](./DECISIONS.md)（已确认长期选择）；
-4. 阅读 [`WORKFLOW.md`](./WORKFLOW.md)（本次动作步骤）；
-5. 扫描 `inbox/`；
-6. 根据实际任务**按需读取** [`WRITING_RULES.md`](./WRITING_RULES.md)。
-
-不要在不了解当前目录结构与已有文档的情况下直接生成大量内容。
+开始一次 curation 前，按 [`WORKFLOW.md`](./WORKFLOW.md) 定义的读取顺序加载协议栈并扫描 `inbox/`。不要在未了解当前目录结构与已有文档的情况下直接生成大量内容。
 
 ## 3. 权限边界（允许）
 
@@ -85,8 +76,3 @@
 > **用户本次明确指令 > 本文件（AGENTS.md） > [`DECISIONS.md`](./DECISIONS.md) > [`WORKFLOW.md`](./WORKFLOW.md) > [`WRITING_RULES.md`](./WRITING_RULES.md) > [`STATE.md`](./STATE.md) 的运行时上下文**
 
 [`STATE.md`](./STATE.md) 仅提供运行时上下文（当前阶段 / 主题 / 重点），**绝不能覆盖本文件中的权限红线与 Git 安全约束**。
-
-## 8. 本轮范围与历史定位
-
-- 本仓库当前正处在 V2 MVP 的**协议基础（Protocol Foundation）**阶段；本轮只建立最小仓库协议与 intake / source 骨架，**不迁移知识、不实现完整 Nightly、不创建复杂基础设施**。
-- 需求基线以 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) 为准；早期完整架构探索（[`V2_ARCHITECTURE_PROPOSAL.md`](./V2_ARCHITECTURE_PROPOSAL.md)、[`V1_TO_V2_MAPPING.md`](./V1_TO_V2_MAPPING.md)、[`MIGRATION_PLAN_V2.md`](./MIGRATION_PLAN_V2.md)）中已被 MVP 延后的 sidecar、schema、review、derived、ontology、identity trust、状态机等设计**不得重新引入**。
