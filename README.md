@@ -1,277 +1,72 @@
 # my-embodied-ai-kb
 
-> 中文定位：**具身智能研究实验室**
+> **个人技术知识库（Personal Technical Knowledge Base）**
 >
-> 这是一个持续演化的个人研究项目，用于组织具身智能、机器人学习、视觉—语言—动作模型、世界模型、强化学习和数据质量评估相关的学习、调研、实验与研究想法。
+> 一个长期运行、Agent-first、Git-native 的个人技术知识沉淀系统。
+> 当前以**具身智能 / 机器人**为深度主线，但知识域可扩展到机器学习、计算机系统、Linux、Git / 软件工程、数学、研究方法、Agent Engineering 等。
 
-## 项目定位
+## 这是什么
 
-本项目**不是一份已经完整收录过去全部知识的“具身智能知识库”**，也不要求在启用时一次性迁移所有历史材料。
+这不是一份已经完整收录过去全部知识的“知识库”，也不要求在启用时一次性迁移所有历史材料。它更接近一个持续运行的知识环境：
 
-它更接近一个长期运行的个人研究环境：
+- 用户白天把 `.pdf` / `.md` 放进 `inbox/`；
+- Agent 按仓库自身协议完成 Source 登记、Knowledge 归档、Living Document 安全更新、受约束的论文快速总结、已有 `_map.md` 与明确链接维护；
+- Agent 在 nightly 分支提交，并在聊天窗口报告；
+- 无法可靠判断的材料原样留在 `inbox/`，由用户后续处理。
 
-- 过去知识按需要逐步迁移；
-- 当前研究形成结构化专题；
-- 新论文优先建立独立笔记；
-- 相互关联的工作再沉淀为专题综述；
-- 实验、失败记录和研究想法持续回流；
-- Agent 依据 [`AGENTS.md`](./AGENTS.md) 协助维护。
+知识随真实使用逐步积累与演化，而非一次性搬运。
 
-当前内容只是项目的初始版本，而不是对个人既有知识的完整声明。
+## 当前重点
 
-## 当前入口
+仓库当前仍在持续维护的主线（保守列举，详见 [`RESEARCH_MAP.md`](./RESEARCH_MAP.md)）：
 
-| 文件 | 作用 |
+1. 实机机器人数据质量评估；
+2. 视觉—语言—动作模型（VLA）训练、后训练与实时控制执行验证；
+3. 世界模型；
+4. 强化学习与 VLA 后训练；
+5. 执行验证与可靠性；
+6. 数据生成与跨具身迁移。
+
+> 具身智能是当前的深度主线，但不是唯一主题。新领域会在实际出现时自然进入知识库。
+
+## 主要入口
+
+### 协议栈（Agent 与用户共同遵守的根目录约定）
+
+| 文件 | 职责 |
 |---|---|
-| [`RESEARCH_MAP.md`](./RESEARCH_MAP.md) | 当前研究版图、主线关系与开放问题 |
-| [`MIGRATION_BACKLOG.md`](./MIGRATION_BACKLOG.md) | 历史学习材料的渐进迁移清单 |
-| [`AGENTS.md`](./AGENTS.md) | Agent 的维护规则、写作规范与 Git 约束 |
-| [`CHANGELOG.md`](./CHANGELOG.md) | 项目结构和重要内容变更记录 |
-| [`docs/02_topics/README.md`](./docs/02_topics/README.md) | 专题文档索引 |
-| [`docs/02_topics/vla_runtime_verification_online_learning/2026-07-31_VLA实时控制执行验证与在线学习.md`](./docs/02_topics/vla_runtime_verification_online_learning/2026-07-31_VLA实时控制执行验证与在线学习.md) | 当前首个前沿专题观察 |
+| [`AGENTS.md`](./AGENTS.md) | Agent 持久行为边界、权限红线、Git 安全约束 |
+| [`DECISIONS.md`](./DECISIONS.md) | 已确认的长期方向性 / 架构性决策 |
+| [`STATE.md`](./STATE.md) | 轻量运行时上下文：当前阶段、活跃主题、迁移重点 |
+| [`WORKFLOW.md`](./WORKFLOW.md) | 每次 inbox curation 的具体步骤 |
+| [`WRITING_RULES.md`](./WRITING_RULES.md) | 文档输出规范（唯一权威真源） |
+| 本文 `README.md` | 人类 HOME：项目入口、当前重点、导航 |
 
-## 目录结构
+冲突时以 [`AGENTS.md`](./AGENTS.md) 中的权限红线为最高安全约束；完整优先级见 [`WORKFLOW.md`](./WORKFLOW.md)。
 
-```text
-my-embodied-ai-kb/
-├── README.md
-├── AGENTS.md
-├── RESEARCH_MAP.md
-├── MIGRATION_BACKLOG.md
-├── CHANGELOG.md
-├── .gitignore
-├── .gitattributes
-│
-├── docs/
-│   ├── 01_foundations/    # 系统学习与基础理论
-│   ├── 02_topics/         # 跨论文专题综述与研究主线
-│   ├── 03_papers/         # 单篇论文阅读笔记
-│   ├── 04_experiments/    # 实验方案、复现、结果与失败记录
-│   ├── 05_ideas/          # 未验证想法、研究问题与假设
-│   └── 06_reports/        # 阶段报告、汇报材料与对外交付
-│
-├── templates/             # 统一文档模板
-└── assets/                # 图片、图表和小型附件说明
-```
+### 知识入口
 
-## 文档分工
+- **`docs/` —— V1 legacy 知识（渐进迁移中）**
+  现有大量已沉淀的论文笔记、专题、实验与学习文档仍在 `docs/` 下，采用旧的 `01_foundations / 02_topics / 03_papers / 04_experiments / 05_ideas / 06_reports` 文档类型目录结构。**这只是 V1 遗留结构，不是 V2 目标结构。** 这些材料按「使用时迁移」原则，在未来被真实引用或用户要求时才迁入新的 V2 结构。
+- **`RESEARCH_MAP.md` —— 当前研究版图快照（V1 legacy 全局地图）**
+  仍是有价值的当前研究主线、专题关系与开放问题快照；V2 的细粒度认知地图将以每个领域内的 `_map.md` 形式逐步取代它。
+- **V2 新知识结构（尚未生成）**
+  新的知识将采用 **Domain → Area → Topic → 必要时 Subtopic** 的领域 / 问题优先结构（详见 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md)）。真正的 `kb/` Topic 目录留到下一轮选取实际 pilot 内容时按内容自然生成，**本轮刻意不创建空骨架**。
 
-### `01_foundations`
+### 投放与来源
 
-用于长期、系统性学习。默认采用“双文档学习模式”：
+- **`inbox/`** —— 用户白天手动投放 `.pdf` / `.md` 的入口；Agent 在 nightly curation 中处理。
+- **`sources/papers/` + `sources/papers.yaml`** —— Source 层：论文 PDF（经 Git LFS 管理）与轻量身份 / 版本 registry。原始 Source 文件只读，不被改写。
 
-1. 学习规划与进度；
-2. 长期学习笔记。
+## 简短使用说明
 
-每一讲结束后先进入问答区，重要澄清再回写笔记。
+1. 把新的论文 PDF 或 Markdown 笔记丢进 `inbox/`；
+2. Agent 按 [`WORKFLOW.md`](./WORKFLOW.md) 在 nightly 分支完成策展，并在聊天中报告；
+3. 你审阅 nightly 分支、确认后合并；
+4. **不要手动大规模重排已有知识**——结构化整理由 Agent 在协议约束下进行，不确定时材料留在 `inbox/`。
 
-### `02_topics`
+PDF、大型图片等二进制走 Git LFS（`assets/` 与 `sources/` 中的 `*.pdf` / `*.pptx` 已由 `.gitattributes` 配置）。
 
-用于跨论文、跨实验的专题综合。专题文档回答：
-
-- 这个方向解决什么问题？
-- 方法之间如何演进？
-- 共同假设和主要分歧是什么？
-- 哪些结论已经较稳固？
-- 哪些问题仍然开放？
-- 对当前研究有什么可执行的启发？
-
-### `03_papers`
-
-用于单篇论文阅读笔记。论文笔记优先保留：
-
-- 核心问题；
-- 方法与数学形式；
-- 实验是否真正支撑结论；
-- 局限与失败模式；
-- 与已有工作的关系；
-- 对当前研究的参考价值。
-
-### `04_experiments`
-
-用于可复现实验记录，包括：
-
-- 实验问题；
-- 假设；
-- 数据与环境；
-- 评价指标；
-- 实验配置；
-- 结果；
-- 失败原因；
-- 下一步。
-
-### `05_ideas`
-
-用于保存尚未成熟的想法。允许零散，但必须逐步区分：
-
-- 合理洞见；
-- 隐含前提；
-- 可能反例；
-- 可验证预测；
-- 最小实验。
-
-### `06_reports`
-
-用于阶段汇报、调研报告与对外交付。这里可以引用其他目录内容，但不应成为唯一知识来源。
-
-## 新内容放在哪里
-
-优先级如下：
-
-1. **新的论文**：先进入 `docs/03_papers/`；
-2. **新的研究问题或方法类别**：新建 `docs/02_topics/` 专题；
-3. **与既有专题高度连续的补充**：更新对应专题；
-4. **尚未验证的个人判断**：进入 `docs/05_ideas/`；
-5. **实际运行、复现或消融**：进入 `docs/04_experiments/`；
-6. **旧材料迁移**：依据 [`MIGRATION_BACKLOG.md`](./MIGRATION_BACKLOG.md) 渐进处理。
-
-默认原则：
-
-> **优先新增独立文档，次选扩写已有文档。**
-
-不要为了“看起来完整”而把多个方向压缩到一个超长文件中。
-
-## 文档状态
-
-建议在 Markdown 文件顶部使用 YAML 元数据：
-
-```yaml
 ---
-title: 文档标题
-type: paper-note | topic | foundation | experiment | idea | report
-status: seed | active | stable | archived
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-tags:
-  - embodied-ai
----
-```
 
-状态含义：
-
-- `seed`：只有初始框架或零散内容；
-- `active`：正在持续维护；
-- `stable`：结构和主要结论已相对稳定；
-- `archived`：保留历史，但不再作为当前结论。
-
-## 文件命名
-
-### 长期维护文档
-
-不使用日期前缀：
-
-```text
-动作块执行与闭环反馈.md
-世界模型数据协议.md
-```
-
-### 阶段性观察与报告
-
-使用日期前缀：
-
-```text
-2026-07-31_VLA实时控制执行验证与在线学习.md
-```
-
-### 单篇论文笔记
-
-优先使用稳定短标题：
-
-```text
-CheckVLA_阅读笔记.md
-Robot_Data_Curation_with_Mutual_Information_Estimators_阅读笔记.md
-```
-
-### 目录放置约定
-
-- **`01_foundations`**：保持「双文档学习模式」——每个主题一个子目录，内含 `学习规划与进度.md` + `长期学习笔记.md`。
-- **`02_topics`**：每个专题一个子目录（英文 slug）；主文档为长期维护的总览时用**稳定名、无日期**（如 `实机机器人数据质量评估总览.md`），若为阶段性快照/观察则用 `YYYY-MM-DD_` 前缀；专题配图放 `assets/<topic-slug>/`。
-- **`03_papers`**：每篇论文一个子目录（英文 slug），内含 `<slug>_阅读笔记.md` + 同名 PDF（经 Git LFS 管理）+ 必要配图。
-- **`04_experiments` / `05_ideas` / `06_reports`**：单文件即可，按上述日期/稳定名规则命名。
-
-### 文档状态初始值
-
-- 已带完整内容且经核验 → `active`；
-- 仅骨架、待复验或迁移中 → `seed`。
-
-### 标签受控词表
-
-`tags` 从以下白名单选取，新增需先确认：
-
-```text
-embodied-ai, vla, world-model, reinforcement-learning, imitation-learning,
-data-quality, robot-data, runtime-verification, foundation, survey,
-experiment, research-idea, learning-plan, learning-notes
-```
-
-## 公式和图表
-
-行内公式：
-
-```latex
-$Q(s,a)$
-```
-
-块公式：
-
-```latex
-$$
-Q(s,a)=r+\gamma\max_{a'}Q(s',a')
-$$
-```
-
-流程图优先使用 Mermaid。涉及复杂图像、实验结果图或论文原图时，放入 `assets/` 并使用相对路径引用。
-
-## 历史材料迁移策略
-
-不建议一次性搬运所有旧笔记。采用“使用时迁移”：
-
-1. 当前研究引用到旧知识；
-2. 检查旧材料是否仍然准确；
-3. 提炼稳定结论；
-4. 迁入合适目录；
-5. 在原材料中保留迁移说明或来源；
-6. 更新 `MIGRATION_BACKLOG.md`。
-
-这样可以避免把过时、重复或上下文不完整的内容直接复制进新项目。
-
-## Git 初始化
-
-将文件夹放到本地目标位置后：
-
-```bash
-cd my-embodied-ai-kb
-git init
-git add .
-git commit -m "chore: initialize my-embodied-ai-kb"
-git branch -M main
-```
-
-创建远程仓库后：
-
-```bash
-git remote add origin <YOUR_REMOTE_URL>
-git push -u origin main
-```
-
-建议先保持私有仓库。论文 PDF、模型权重、数据集和大型图片不要直接提交到普通 Git 历史；确实需要版本控制时使用 Git LFS 或外部存储。
-
-## 推荐提交格式
-
-```text
-docs: add CheckVLA paper note
-docs: update VLA runtime verification topic
-research: add action-consequence consistency hypothesis
-experiment: record world-model data scoring ablation
-chore: reorganize topic index
-```
-
-## 当前版本
-
-- 项目状态：`seed`
-- 初始化日期：2026-07-31
-- 当前重点：
-  1. 实机机器人数据质量评估；
-  2. 世界模型辅助数据分析与执行验证；
-  3. 视觉—语言—动作模型后训练；
-  4. 机器人强化学习与数据闭环。
+旧 V1 架构探索与早期设计详见 [`V1_INVENTORY.md`](./V1_INVENTORY.md)、[`V2_ARCHITECTURE_PROPOSAL.md`](./V2_ARCHITECTURE_PROPOSAL.md)、[`V1_TO_V2_MAPPING.md`](./V1_TO_V2_MAPPING.md)、[`MIGRATION_PLAN_V2.md`](./MIGRATION_PLAN_V2.md)；当前权威需求基线为 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md)。
