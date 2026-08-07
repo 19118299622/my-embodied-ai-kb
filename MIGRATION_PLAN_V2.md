@@ -10,6 +10,16 @@ tags:
   - v2-design
 ---
 
+> ## ⚠️ 文档权威性声明（2026-08-07 重新对齐）
+>
+> **本文档（含 M0–M7 迁移阶段）属于早期「完整架构探索」对应的 superseded implementation proposal，不再作为当前 roadmap。**
+>
+> 经重新需求对齐，正式目标已收敛为轻量 V2 MVP（Agent-first、Git-native、面向长期个人技术知识沉淀）。**当前权威需求基线为 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md)。**
+>
+> **若本文件与 `V2_MVP_SPEC.md` 冲突，一律以 `V2_MVP_SPEC.md` 为准。** 其中 M0–M7 阶段序列明确标记为**旧架构对应的 superseded implementation proposal**，不指导当前实现；旧 V1 改为「按需使用时真正迁移」（见 `V2_MVP_SPEC.md` §4）。
+>
+> 本文件保留其迁移思考与决策演化证据，**不会被改写以迎合新 MVP**。
+
 # MIGRATION_PLAN_V2 — 迁移计划（Phase 1c）
 
 > 本文件是 V1 → V2 架构升级的 **Phase 1c 产出**：把 [`V1_TO_V2_MAPPING.md`](./V1_TO_V2_MAPPING.md) 的映射关系排成**可执行、可验证、可回滚**的阶段序列。
@@ -99,7 +109,10 @@ tags:
 
 ---
 
-## 4. 迁移阶段（M0 → M7）
+## 4. 迁移阶段（M0 → M7）— ⚠️ superseded implementation proposal
+
+> **本阶段序列（M0–M7）对应早期完整架构探索，已不再作为当前 roadmap。**
+> 当前轻量 V2 MVP 不再按此分阶段实现；旧 V1 改用「按需使用时真正迁移」（见 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) §4）。本序列仅保留作为历史参考。
 
 ### 阶段总览
 
