@@ -201,7 +201,7 @@ V1 的 `INDEX.md` 同时承担两种互斥职责（I9 / D8 同源问题）：
 
 | V1 字段 | 出现 | V2 位置 | V2 形态 | 自动化 |
 |---|---:|---|---|---|
-| `migrate_source` | 16 | sidecar | `previous_paths[]` + `relations: derived_from` | **A2** |
+| `migrate_source` | 16 | sidecar（durable migration provenance） | `previous_paths[]` 承载旧路径；如需保留额外迁移来源语义，记入 durable `migration_source` 字段（**不**使用 `relations: derived_from`，Rev2 规定 `relations[].target` 仅限 Knowledge UID） | **A2** |
 | `short_name` | 16 | front matter | `aliases[]` 的第一项 + 参与 `identity_key` 生成 | **A2** |
 | `pdf_index` | 15 | source registry | `local_hint` + `portable: false` | **A1** |
 | `source_note` | 2 | sidecar | 并入 source registry `notes` | **A2** |
@@ -284,7 +284,7 @@ V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论�
 |---|---|---|---|---|
 | I1 证据强度标注 `[PAPER]/[RESULT]/[INFERENCE]/[OPEN]` | 写作规范（D6 全文使用） | **升格为 Agent 写保护边界**：带 `[INFERENCE]` / `[OPEN]` 的段落进入不可自动改写集合（V2 §8.4） | **完全保留并强化** | **A0**（保护规则本身不可自动放宽） |
 | I2 核验日期 | 被动字段 `read_date` / 正文「核验日期：」 | `last_verified_at` + `temporal_class` → `verification_due_at = last_verified_at + SLA`（确定性）→ `derived/health/stale.md` 记录 `stale/not-stale` | 保留并变为主动；不依赖隐式系统时间 | **A3**（计算 due_at，确定性） |
-| I3 迁移溯源 | `migrate_source` 字段 + 正文引用块 | `previous_paths[]` + `relations: derived_from` | 保留 | **A2** |
+| I3 迁移溯源 | `migrate_source` 字段 + 正文引用块 | `previous_paths[]` 承载旧路径（durable migration provenance）；额外迁移来源语义记入 durable `migration_source` 字段 | 保留（改用字段而非关系） | **A2** |
 | I4 Source / Knowledge 分离 | 「PDF 不进 git，只建索引」的默认实践 | `sources/registry` + `sources/files` 显式两层 | 保留并命名 | **A1** |
 | I5 双文档 living 模式 | `学习规划与进度.md` + `长期学习笔记.md` | 正式化为 `plan.learning` + `note.concept` 配对（V2 §8.5） | **保留，且被指定为 living document 的原型** | **A1** |
 | I6 五分类处置词表 | `MIGRATION_CHECKLIST`：迁移/改写/仅建索引/暂缓/排除 | **intake router 直接复用这五个词**，不另发明 | 完全保留 | **A2**（分诊建议） |
@@ -388,3 +388,4 @@ V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论�
 - 2026-08-07：建立 V1 → V2 映射表（Phase 1b）。覆盖顶层文件 13 项、目录层 8 项、知识簇 12 个、特殊对象 4 类、元数据字段 23 个、取值映射 3 组（type 12 / status 7 / tags 6）、隐含设计 10 项、`RESEARCH_MAP` 逐节 11 项、链接问题 6 类、技术债务 13 项，并为每项给出迁移策略、风险与自动化等级。**本轮为设计文档，未执行任何迁移。**
 - 2026-08-07（rev1）：**同步 V2 架构提案的协议缺陷修正**。§5.1 将 `status` 映射目标改为 `document_state` + `knowledge_status` 双正交字段；§5.4 重写为双轴取值映射（`stable`/`archived` 不再废弃，归入 `document_state`）；§9 D9 同步；§1 CHANGELOG 行将 nightly 报告位置改为 `reports/nightly/`（非 Derived）。**未执行任何迁移。**
 - 2026-08-07（rev2）：**同步 V2 架构提案的协议边界收尾（R2 系列）**。§5.4 改为**保守迁移**：`seed→draft×unverified`、`active→active×默认 unverified`（不自动=`current`）、`stable`/`archived` 的 `knowledge_status` 默认 `unverified`；明确 `knowledge_status` 赋值需语义判断、降为 A1（非纯机械 A2）；§6 I2 健康指标改为确定性的 `verification_due_at=last_verified+SLA`（不依赖隐式系统时间）；§11 同步说明 `status` 认知轴非纯机械。**未执行任何迁移。**
+- 2026-08-07（rev3-final）：**设计文档最终一致性清理**。§5.2 与 §6 I3 修正 `migrate_source` 迁移映射：旧 `previous_paths[] + relations: derived_from` 改为 `previous_paths[]`（durable migration provenance）承载旧路径，额外迁移来源语义记入 durable `migration_source` 字段；**不再使用 `relations: derived_from`**（Rev2 规定 `relations[].target` 仅限 Knowledge UID，该关系仅可用于可选的 Knowledge→Knowledge 派生，不用于路径 / Source provenance）。与 V2 §10.1 收缩后的 Relation 模型一致。**未执行任何迁移。**

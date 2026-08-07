@@ -212,7 +212,7 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | **触碰的已有文件** | **0** |
 | **Agent 可做** | 全部（只读） |
 | **必须人工** | 每天扫一眼分诊报告，标记误判 |
-| **退出条件** | **连续 ≥ 2 周**；L1–L3（可自动识别）占比 ≥ 70%；L4/L5（需人工）中的误判率可接受；`review/` 没有堆积 |
+| **退出条件** | **连续 ≥ 2 周**；L1 / L2 / L2.5（强 / 中信任，可自动识别）占比 ≥ 70%；L3–L5（弱启发式，需人工复核）中的误判率可接受；`review/` 没有堆积 |
 | **回滚** | 不适用（只读） |
 | **diff 预算** | 每天新增 1 个报告文件 |
 
@@ -273,7 +273,8 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | 注入 `uid`（front matter 追加一行） | A2 | 提供「正文字节未变」的 hash 证据 |
 | 生成 / 更新 sidecar | A2 | — |
 | `type` / `status`(生命周期轴 `document_state`) 的机械值映射 | A2 | 映射表已确认（`V1_TO_V2_MAPPING §5.3/5.4`）；注意 `knowledge_status`(认知轴) 需语义判断，降为 A1，不得纯机械推断为 `current`（保守迁移，见 R2-7） |
-| 在 `inbox/` 中识别 L1–L3 身份命中 | A2 | dry-run 期误判率可接受 |
+| 在 `inbox/` 中识别 L1 / L2 / L2.5 身份命中（uid 或 `based_on_content_hash` 背书，强 / 中信任） | A2 | SAFE AUTO；dry-run 期误判率可接受 |
+| 处理 L3–L5（路径 / 文件名 / `previous_paths` / `title` / 正文相似度等弱启发式） | A1 | **不得 SAFE AUTO**；仅作候选检索或进 `review/` 由人工复核 |
 | 追加型 living 更新（V2 §8.2 类别 A） | A2 | M5 观察期结束后才开启 |
 | 生成夜间报告（`reports/nightly/`，非 Derived） | A3 | — |
 | **遵守 nightly single-flight（rev2）** | — | 同一时刻仅允许 **1 个 unresolved** nightly 分支；「等待人工 review」**不算 resolved**，新运行必须 BLOCK/ABORT；禁止并行 nightly 分支 / 堆叠 PR / 自动 rebase / 自动 merge（见 `V2 §16.3`） |
@@ -369,3 +370,4 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 - 2026-08-07：建立 V2 迁移计划（Phase 1c）。定义 5 条约束、10 类先不迁内容、主/次试点及其选择理由、M0–M7 八个阶段（含目标 / 交付物 / 触碰文件 / 退出条件 / 回滚 / diff 预算）、自动化分级执行清单（A3/A2 十项、A0/A1 十五项）、7 项验证与 6 类回滚路径、12 个待用户确认问题（含推荐默认值）。**本轮为设计文档，未执行任何迁移。**
 - 2026-08-07（rev1）：**同步 V2 架构提案的协议缺陷修正**。M2/M5 标题对齐术语（Foundation MVP = M2，Curator Dry-run MVP = M5）；M3 字段列表改为双轴 `document_state`/`knowledge_status` 且 sidecar 仅 durable；M5 与 §5.1 的 nightly 报告路径改为 `reports/nightly/`（非 Derived）；§1 约束 5 明确 human 可手动合并 nightly 分支；§7 的 Q2/Q6/Q10/Q12 补充本轮修正说明。**未执行任何迁移。**
 - 2026-08-07（rev2）：**同步 V2 架构提案的协议边界收尾（R2 系列）**。M2 追加「Read-only Observation Checkpoint」说明（不移动 docs / 不改 V1 canonical / 不注入 UID / 不批量 sidecar / 不执行 semantic curator）；M5 nightly 报告路径改为 `reports/nightly/YYYY-MM-DD/<run-id>.md`（按 run-id 唯一命名）；§5.1 新增 single-flight 约束行（`knowledge_status` 认知轴映射降为 A1 语义判断，非纯机械 A2），并标注 nightly single-flight「等待人工 review 不算 resolved」。**未执行任何迁移。**
+- 2026-08-07（rev3-final）：**设计文档最终一致性清理**。§5.1 与 M5 退出条件修正「自动身份识别」范围：仅 L1 / L2 / L2.5（强 / 中信任，uid 或 `based_on_content_hash` 背书）可 SAFE AUTO（A2）；L3–L5（路径 / 文件名 / `previous_paths` / `title` / 正文相似式等弱启发式）**不得 SAFE AUTO**，仅作候选检索或进 `review/` 人工复核（A1）。与 V2 §7.3 / §8.2b 的信任分级一致。**未执行任何迁移。**

@@ -374,8 +374,9 @@ verification_due_at = last_verified_at + SLA(temporal_class)   # 确定性：纯
 ```
 
 - `SLA` 由 `temporal_class` 决定（见上表：`stable`=365 / `evolving`=180 / `fast_moving`=60 天）；
-- 提交的 `derived/health/stale.md` **只记录 `verification_due_at` 与 `stale / not-stale` 判定**（确定性、可重建），**不再每天产出 `debt_days + 1` 的滚动数字**，避免无意义 diff 噪声；
-- 若健康报告确需展示「逾期天数（`overdue_days`）」，则 `as_of_date` 必须作为 Derived Builder 的**显式输入**传入，并参与 `inputs_hash`——**禁止脚本隐式调用系统当前时间却声称「相同输入产生相同结果」**。
+- 提交的 `derived/health/stale.md` **优先只记录确定性的 `verification_due_at`**（由 `last_verified_at + SLA` 算出，不依赖当前时间，可无歧义重建），**不再每天产出 `debt_days + 1` 的滚动数字**，避免无意义 diff 噪声；
+- **`stale / not-stale` 判定本身依赖「当前日期」**：只要 committed Derived 中包含 `stale` 状态（把过期判定固化进派生文件），就必须将 `as_of_date` 定义为 Derived Builder 的**显式输入**并纳入 `inputs_hash`——**不能只把 `overdue_days` 视作需要 `as_of_date` 的特例**；
+- 若希望进一步减少 Git diff，可让 committed health 主要保存 `verification_due_at`，把「是否 stale」的判定推迟到带显式 `as_of_date` 的查询 / 运行时；**无论采用哪种方案，所有影响 committed output 的时间变量都必须是显式输入**，**禁止脚本隐式调用系统当前时间却声称「相同输入产生相同结果」**。
 
 **这是把 V1 的被动「核验日期」变成主动机制的关键一步**，也是 V2 对研究型知识库最实际的增值；同时严守「所有影响 committed Derived 输出的变量都必须是显式输入」。
 
@@ -465,7 +466,8 @@ content_hash: sha256:4d1a…
 ingested_at: 2026-07-31T00:00:00Z
 reviewed_at: 2026-08-03T00:00:00Z
 last_verified_at: 2026-07-31
-# 注意：verification_due_at / stale 标记 属 derived/health/（确定性派生，不依赖隐式系统时间，可重建）
+# 注意：verification_due_at 属 derived/health/（确定性派生：last_verified_at + SLA，不依赖隐式系统时间）
+#       若 committed health 含 stale/not-stale 判定，则 as_of_date 须作为显式输入纳入 inputs_hash
 #       link_health 属 derived/health/；nightly_runs 属 operational history（reports/nightly/），均不写进 sidecar
 ```
 
@@ -1265,3 +1267,4 @@ Curator Dry-run MVP = M5：nightly 走完 SCAN→ROUTE，**只出分诊报告，
 - 2026-08-07：建立 V2 架构提案（Phase 1）。基于 `V1_INVENTORY.md` 的实测审计，给出 22 项设计要点、front matter vs sidecar 专项论证、40 行权限矩阵、11 状态 nightly 状态机、分层 Git 事务模型、MVP 边界与 12 项设计风险。**本轮为设计文档，未实施任何结构变更。**
 - 2026-08-07（rev1）：**架构协议缺陷定向修正（Architecture Protocol Fixes，非重新设计）**。依据独立架构审查意见，闭环 6 个 P0 与 6 个 P1 协议级矛盾/缺口：P0-1 单一 `status` 正交拆为 `document_state`（生命周期）× `knowledge_status`（认识论）双轴；P0-2 新增 §16.0 Inbox Transport Protocol；P0-3 新增 §8.2b Living Document Lineage Protocol（强/中/弱信任分级，弱启发式禁 SAFE AUTO）；P0-4 Nightly 改为 single-flight；P0-5 移除 Derived 中的 `run_id`/`generated_at`，确立「派生=输入确定性纯函数」；P0-6 Nightly Report 移出 Derived，独立为 Operational History 平面 `reports/nightly/`；P1-1 重划 durable/derived 元数据（sidecar 仅留 durable，健康指标进 `derived/health/`）；P1-2 Relation 实体类型化并移除冗余 `updates`；P1-3 修正权限矩阵（红线仅约束非人类角色、human 可合并 main、schema 按已批准 spec 实施允许）；P1-4 Derived 重建改为临时目录+校验+原子 swap；P1-5 失败 Run 审计保留；P1-6 统一 MVP 术语（Foundation MVP=M2，Curator Dry-run=M5）。**未进入 Phase 2，未改动 V1，未实施任何迁移，未实现 Nightly，未注入 UID。** 同步更新 `V1_TO_V2_MAPPING.md` 与 `MIGRATION_PLAN_V2.md`。
 - 2026-08-07（rev2）：**架构协议边界最终收尾（Architecture Protocol Cleanup，非重新设计、非 Phase 2）**。闭环 7 个剩余协议边界问题：R2-1 正式定义 Nightly single-flight 的 `unresolved`/`resolved`（「等待人工 review」≠ resolved；只有 human merge/reject 或失败已审计关闭才算 resolved；新 run 须 BLOCK/ABORT；禁并行/堆叠/自动 rebase/自动 merge），同步 §16.1 状态图与 §17.1；R2-2 统一 Living Document 身份信任级（L3 路径/文件名降为弱启发式，仅候选检索、禁 SAFE AUTO；统一 §7.3 与 §8.2b，新增 previous_paths 不单独证明同一 living doc、身份确认≠内容安全）；R2-3 统一 M2/M3/M5（Foundation MVP=M0+M1+M2 累计只读健康层，M3=UID Pilot，M5=Curator Dry-run，删「dry-run 可在 M2 提前做」）；R2-4 区分 runtime audit（`.curator/runs/<run-id>/`，gitignore，分支 reset/删除不丢）与 durable operational history（`reports/nightly/YYYY-MM-DD/<run-id>.md` 唯一命名），明确 Git 回滚只回滚 mutation；R2-5 收缩 Relation 模型（移除 `belongs_to`，`derived_from` 收窄为可选 Knowledge→Knowledge，`relations[].target` 只允许 Knowledge UID）；R2-6 修正 Derived 隐式时间输入（`verification_debt=now-…` 改为确定性 `verification_due_at=last_verified+SLA`，`overdue_days` 需显式 `as_of_date` 参与 inputs_hash）；R2-7 保守 V1 status 迁移（V1 `active` 默认 `unverified`，不自动= `current`，`knowledge_status` 赋值降为 A1 语义判断）。**未进入 Phase 2，未改动 V1 知识，未实施迁移，未注入 UID，未生成 sidecar，未实现 Nightly/Curator，未创建任何 V2 基础设施，未 merge main/PR #1。** 同步更新 `V1_TO_V2_MAPPING.md` 与 `MIGRATION_PLAN_V2.md`。
+- 2026-08-07（rev3-final）：**设计文档最终一致性清理（非重新设计、非 Phase 2）**。仅修 3 处残留：① Derived 时间确定性（§6.2、§6.4 注释）—明确 `stale/not-stale` 判定同样依赖时间，只要 committed Derived 含 `stale` 状态，`as_of_date` 即须作为显式输入纳入 `inputs_hash`（不限于 `overdue_days` 特例）；② `MIGRATION_PLAN_V2.md` §5.1 / M5 退出条件—自动身份识别仅覆盖 L1/L2/L2.5，L3–L5 弱启发式一律不得 SAFE AUTO（仅候选检索 / 人工复核）；③ `V1_TO_V2_MAPPING.md` §5.2 / §6 I3—`migrate_source` 改用 `previous_paths[]`（durable migration provenance）承载旧路径，额外来源语义记入 durable `migration_source` 字段，**不再使用 `relations: derived_from`**（Rev2 规定 target 仅限 Knowledge UID）。**未进入 Phase 2，未改动 V1 知识，未实施迁移，未注入 UID，未生成 sidecar，未实现 Nightly/Curator，未创建任何 V2 基础设施，未 merge main/PR #1。**
