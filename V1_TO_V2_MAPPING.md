@@ -60,7 +60,7 @@ tags:
 |---|---|---|---|---|---|
 | `README.md` | `README.md`（重写为 HOME，见 V2 §11.2） | `SPLIT` | 中 | **A0** | V1 的 README 混合了「入口 + 目录说明 + tags 白名单 + 使用约定」。白名单迁往 `schema/`，使用约定迁往 `AGENTS.md`，只留导航。**这是用户的门面文件，不允许自动改写。** |
 | `AGENTS.md` | `AGENTS.md` v2（角色化权限矩阵 + 五条红线） | `SPLIT` | 中 | **A0** | §1–§8 的写作规范全部保留；§9 Git 规则升级为 V2 §15 权限矩阵；新增 intake 与 nightly 章节。V1 §7「当前研究关注点」下沉为 `maps/embodied-ai.md` 的「当前焦点」区 |
-| `CHANGELOG.md` | `CHANGELOG.md` | `KEEP` | 低 | **A1**（仅追加） | 保持人工语义变更日志。**不要**被 nightly 报告污染——机器变更进 `derived/reports/nightly/` |
+| `CHANGELOG.md` | `CHANGELOG.md` | `KEEP` | 低 | **A1**（仅追加） | 保持人工语义变更日志。**不要**被 nightly 报告污染——机器运行记录进 `reports/nightly/`（Operational History，非 Derived） |
 | `RESEARCH_MAP.md` | 分解为 4 类产物 | `SPLIT` | **高** | **A0** | 详见 §7，全文档最需要人工判断的一项 |
 | `PROJECT_INVENTORY.md` | `derived/indexes/inventory.md` | `DERIVE` | 低 | **A3** | V1 声明 34 条 / 实际 85 个文件，已严重过期（D6）。转派生后过期问题结构性消失。原文件保留一轮并加 deprecated 提示，确认派生版可用后删除 |
 | `MIGRATION_BACKLOG.md` | `KEEP` → 完成后 `ARCHIVE` | `DEFER` | 低 | **A0** | 用户明确要求不删。它记录的是**尚未完成的历史材料迁移**（V1→KB），与本轮的 V1→V2 结构迁移是两件事，不可混为一谈 |
@@ -190,7 +190,7 @@ V1 的 `INDEX.md` 同时承担两种互斥职责（I9 / D8 同源问题）：
 |---|---|---|---|---|
 | `title` | front matter | `title` | 无 | — |
 | `type` | front matter | `type` | **取值改变**，见 §5.3 | **A1** |
-| `status` | front matter | `status` | **取值改变**，见 §5.4 | **A1** |
+| `status` | front matter | `document_state` + `knowledge_status`（两个正交字段，见 §5.4） | **拆分 + 取值改变**，见 §5.4 | **A1** |
 | `created` | front matter | `created` | 无（V1 兼容） | — |
 | `updated` | front matter | `updated` | 语义收紧：仅正文字节变化时更新 | **A2** |
 | `tags` | front matter | `tags` | 归一化，见 §5.5 | **A1** |
@@ -231,19 +231,30 @@ V1 的 `INDEX.md` 同时承担两种互斥职责（I9 / D8 同源问题）：
 | — | `RESEARCH_MAP §4` 的 5 个开放问题 | **`hypothesis.question`**（新增） | 见 §7 | **A0** |
 | — | `分层阅读计划.md` / `学习规划与进度.md` | **`plan.learning`** | V1 用 `topic`/`foundation` 凑合 | **A1** |
 
-### 5.4 `status` 取值映射
+### 5.4 `status` 取值映射（V1 单一 `status` → V2 双正交轴）
+
+V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论状态」，导致两者都无法被清晰使用（D9）。V2 拆成两个正交字段：
+
+**轴一 `document_state`（生命周期）**
+
+| V1 值 | 实际使用 | V2 `document_state` | 自动化 |
+|---|---|---|---|
+| `stable` | **0 次** | `stable`（保留——它本就属于生命周期轴，只是 V1 错放在 status 里） | — |
+| `archived` | **0 次** | `archived`（保留，语义=停止主动维护） | — |
+| `active` | 大量 | `active`（同时映射到 knowledge_status 的 `current`，见下） | **A2** |
+| — | — | `draft` / `frozen`（新增） | — |
+
+**轴二 `knowledge_status`（认识论）**
 
 | V1 值 | 实际使用 | V2 `knowledge_status` | 自动化 |
 |---|---|---|---|
 | `seed` | 大量 | `unverified` | **A2** |
 | `active` | 大量 | `current` | **A2** |
-| `stable` | **0 次** | 废弃（`current` + `temporal_class: stable` 表达） | — |
-| `archived` | **0 次** | 废弃（由 `historical` 取代，语义更准） | — |
 | — | — | `disputed`（新增） | **A1**（Agent 只能提议） |
 | — | — | `superseded`（新增，需 `superseded_by`） | **A0** |
 | — | — | `historical`（新增） | **A0** |
 
-> V1 的状态机后半段是死的（D9）。V2 补的三个态（`disputed` / `superseded` / `historical`）都是**知识判断**，因此全部或部分锁死为人工——这是 V2 「不变量 #2：用户观点不可被 Agent 改写」的直接体现。
+> 两轴正交：`active` 文档可同时是 `unverified`（刚写完还没核验）或 `current`（已确认）。V1 的 `stable` / `archived` **不再废弃**，而是归入 `document_state`——这是本轮（v2-rev1）对 P0-1 的修正。
 
 ### 5.5 `tags` 归一化（39 → 受控集）
 
@@ -328,7 +339,7 @@ V1 的 `INDEX.md` 同时承担两种互斥职责（I9 / D8 同源问题）：
 | D6 | 索引过期 | 全部索引改为派生 | **MVP 即可** | **A3** |
 | D7 | schema 分叉 | 类型扩展字段：D6 的 22 字段成为 `note.literature` 的正式扩展 | M1 | **A1** |
 | D8 | `RESEARCH_MAP` 混合四职责 | §7 分解方案 | M5 | **A0** |
-| D9 | status 后两态未用 | `knowledge_status` 五态 | M1 | **A1** |
+| D9 | status 后两态未用（且 lifecycle 与 epistemology 混在一起） | `document_state` × `knowledge_status` 双正交轴 | M1 | **A1** |
 | D10 | `05_ideas/` 为空 | `RESEARCH_MAP §4` 拆分后立刻有 5 个真实节点 | M5 | **A0** |
 | D11 | 无校验脚本 | `tools/check_health.py` | **MVP 即可** | **A3** |
 | D12 | 中文路径工程摩擦 | Git 配置 + uid 寻址 | MVP | **A3** |
@@ -370,3 +381,4 @@ V1 的 `INDEX.md` 同时承担两种互斥职责（I9 / D8 同源问题）：
 ## 12. 更新记录
 
 - 2026-08-07：建立 V1 → V2 映射表（Phase 1b）。覆盖顶层文件 13 项、目录层 8 项、知识簇 12 个、特殊对象 4 类、元数据字段 23 个、取值映射 3 组（type 12 / status 7 / tags 6）、隐含设计 10 项、`RESEARCH_MAP` 逐节 11 项、链接问题 6 类、技术债务 13 项，并为每项给出迁移策略、风险与自动化等级。**本轮为设计文档，未执行任何迁移。**
+- 2026-08-07（rev1）：**同步 V2 架构提案的协议缺陷修正**。§5.1 将 `status` 映射目标改为 `document_state` + `knowledge_status` 双正交字段；§5.4 重写为双轴取值映射（`stable`/`archived` 不再废弃，归入 `document_state`）；§9 D9 同步；§1 CHANGELOG 行将 nightly 报告位置改为 `reports/nightly/`（非 Derived）。**未执行任何迁移。**

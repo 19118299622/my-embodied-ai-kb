@@ -206,12 +206,14 @@ my-embodied-ai-kb/
 ├── maps/                         ← 人工策展的 MOC（**不是派生**）
 │   └── embodied-ai.md
 │
-├── derived/                      ← ★ DERIVED 平面（可整目录删除并重建）
+├── derived/                      ← ★ DERIVED 平面（可整目录删除并重建，deterministic）
 │   ├── indexes/                  by-domain / by-type / by-status / by-tag / by-title / uid-map.json
 │   ├── timeline.md               recent.md      learning-status.md
 │   ├── graph/                    graph.json  graph.mermaid
-│   ├── health/                   links.md  schema.md  orphans.md  stale.md  duplicates.md
-│   └── reports/nightly/YYYY-MM-DD.md
+│   └── health/                   links.md  schema.md  orphans.md  stale.md  duplicates.md
+
+├── reports/                      ← ★ OPERATIONAL HISTORY 平面（nightly 运行记录，非 Derived）
+│   └── nightly/YYYY-MM-DD.md     每次 nightly 的运行报告（含 run id / 耗时 / 待裁决项 / 健康快照）
 │
 ├── templates/                    ← 按 object type 的模板（V1 七件套升级）
 ├── tools/                        ← 校验与策展脚本（Phase 2+）
@@ -219,6 +221,8 @@ my-embodied-ai-kb/
 └── docs/                         ← ★ V1 原结构，本阶段完全不动
     └── 01_foundations … 06_reports
 ```
+
+> 四平面总览：Source（`sources/`）/ Knowledge（`kb/` + `docs/`）为知识平面，内容不可重建；Derived（`derived/`）为确定性派生，可整目录删除重建；Operational History（`reports/`）为 nightly 运行记录，含易变运行信息，独立于 Derived。
 
 ### 4.2 共存规则（本阶段最关键的一条）
 
@@ -251,6 +255,9 @@ kb/      = V2 知识，所有新内容一律进这里
 | **Source** | 论文 PDF、PPTX、原始 docx、代码快照、网页存档、用户原始未加工资料 | 用户（Agent 只登记） | **不可恢复** | registry 入 git；files 按大小走 LFS 或外部保存 |
 | **Knowledge** | 阅读笔记、概念笔记、专题综合、实验结论、想法、报告 | **仅用户**（Agent 受限） | **不可恢复** | 全部入 git，逐文档历史 |
 | **Derived** | 索引、时间线、recent、图谱、健康报告、部分 map 区块 | **仅 Agent** | 一条命令重建 | 入 git（便于 GitHub 浏览），但标记 generated |
+| **Operational History** | nightly 运行报告（`reports/nightly/`）、失败审计记录、run-state 摘要 | **仅 Agent** | 运行产生；可保留但**不可重建为「同一份」**（含时间戳 / run id） | 入 git，但**不标记 generated、不参与派生确定性校验** |
+
+> 四平面中，Source / Knowledge / Derived 是「知识平面」；Operational History 是「系统运行记录平面」，与知识内容正交。Nightly Report 之所以**不放在 `derived/`**，正是因为它含有运行时间、run id 等易变信息，一旦进 Derived 就会破坏派生确定性（见 P0-5 / §12.1）。
 
 ### 5.2 Source registry 的形态
 
@@ -296,13 +303,14 @@ storage:
 ```markdown
 <!-- GENERATED FILE — DO NOT EDIT
      generator: tools/build_indexes.py
-     run_id: 2026-08-08T03:12:04Z#a1b2c3
      inputs_hash: sha256:9f2c…
      rebuild: python tools/build_indexes.py
 -->
 ```
 
-若用户手改了派生文件，下次运行检测到 `inputs_hash` 与内容不匹配 → **把用户的改动搬到 `review/conflicts/`，不静默覆盖**。
+- 头信息只允许放**稳定的非易变元数据**（generator 名、inputs_hash、rebuild 命令）。**运行时间、`run_id`、随机值等易变字段一律不得写入派生内容**——派生内容必须是「输入的确定性纯函数」（见 §12.1）。
+- 运行信息（本次 run id、触发时间、耗时）记录在 nightly **run report** 中（见 §16.4，位于 `reports/nightly/`，属 operational history，非 Derived）。
+- 若用户手改了派生文件，下次运行检测到 `inputs_hash` 与内容不匹配 → **把用户的改动搬到 `review/conflicts/`，不静默覆盖**。
 
 ---
 
@@ -310,7 +318,7 @@ storage:
 
 ### 6.1 字段分层
 
-**A. 通用必填（7 个，所有知识对象）**
+**A. 通用必填（8 个，所有知识对象）**
 
 | 字段 | 类型 | 谁写 | 说明 |
 |---|---|---|---|
@@ -318,7 +326,8 @@ storage:
 | `title` | string | 用户 | |
 | `type` | enum | 用户 | 来自 `schema/object-types.yaml` |
 | `domain` | enum | 用户 | 来自 `schema/domains.yaml` |
-| `status` | enum | 用户 | 见 §6.3 `knowledge_status` |
+| `document_state` | enum | 用户 | 文档对象生命周期，见 §6.3 |
+| `knowledge_status` | enum | 用户 | 认识论状态，见 §6.3 |
 | `created` | date | 用户/Agent | V1 兼容字段名 |
 | `updated` | date | Agent（仅正文变更时） | V1 兼容字段名 |
 
@@ -328,7 +337,9 @@ storage:
 
 **C. Agent 记账（进 sidecar，见 §6.4）**
 
-`ingested_at`、`reviewed_at`、`last_verified_at`、`content_hash`、`canonical_path`、`previous_paths[]`、`link_health`、`nightly_runs[]`、`identity_key`
+`ingested_at`、`reviewed_at`、`last_verified_at`、`content_hash`、`canonical_path`、`previous_paths[]`、`identity_key`
+
+> `link_health` 与 `nightly_runs[]` **不进 sidecar**：前者属 `derived/health/`（派生健康指标，可重建，不持久化，见 P1-1）；后者属 operational history（见 `reports/nightly/`，见 §16 / P0-6）。每个字段只允许出现在一个地方（§6.4 总原则）。
 
 **D. 类型扩展**
 
@@ -354,7 +365,21 @@ Nightly 计算 `verification_debt = today - last_verified_at - sla`，输出到 
 
 **这是把 V1 的被动「核验日期」变成主动机制的关键一步**，也是 V2 对研究型知识库最实际的增值。
 
-### 6.3 `knowledge_status`（取代 V1 的 status 后两态）
+### 6.3 `document_state` 与 `knowledge_status`（两个正交轴）
+
+V1 的单一 `status` 把「文档工作流状态」与「知识认识论状态」混在一起，导致两者都无法被清晰使用（V1_INVENTORY D9：后两态从未被使用）。V2 显式拆成两个**正交**维度：
+
+**轴一：`document_state` — 文档对象生命周期（workflow state）**
+
+| 值 | 含义 | 谁可设置 |
+|---|---|---|
+| `draft` | 初稿，尚未进入正式知识流 | 用户 / Agent 可新建为 draft |
+| `active` | 正在维护、可被发现与引用 | 用户 |
+| `stable` | 内容已成熟，变更需谨慎 | 用户 |
+| `frozen` | 冻结为不可变快照（如 `report.snapshot`） | 用户 |
+| `archived` | 保留但不再主动维护 / 不出现在主索引 | 用户 |
+
+**轴二：`knowledge_status` — 认识论状态（epistemological state）**
 
 | 值 | 含义 | 谁可设置 |
 |---|---|---|
@@ -364,7 +389,8 @@ Nightly 计算 `verification_debt = today - last_verified_at - sla`，输出到 
 | `superseded` | 被更新结论取代（需 `superseded_by: <uid>`） | **仅用户** |
 | `historical` | 保留作为历史记录，不再作为当前判断 | **仅用户** |
 
-V1 的 `seed` / `active` 映射为 `unverified` / `current`（映射表见 `V1_TO_V2_MAPPING.md`）。V1 的 `stable` / `archived` 从未被使用，直接废弃。
+- 两轴**相互独立**：一篇 `active` 的文档可以同时是 `unverified`（刚写完还没核验）或 `current`（已确认有效）；一篇 `stable` 的文档可以是 `disputed`（结论被新证据挑战）。
+- V1 的 `seed` / `active` 映射到 `knowledge_status` 的 `unverified` / `current`；V1 的 `stable` / `archived` **不再废弃**——它们本就属于生命周期轴，只是 V1 把它错放在 `status` 里，本轮（v2-rev1）将其归入 `document_state`（映射表见 `V1_TO_V2_MAPPING.md` §5.4）。
 
 ### 6.4 ★ 专项论证：front matter vs sidecar
 
@@ -399,7 +425,8 @@ uid: k-7Q2M4XNAB1TE
 title: "RIPT-VLA 阅读笔记"
 type: note.literature
 domain: embodied-ai
-status: current
+document_state: active
+knowledge_status: current
 temporal_class: evolving
 cluster: embodied-ai/ript-vla
 cluster_role: primary
@@ -414,7 +441,7 @@ relations:
 ```
 
 ```yaml
-# kb/embodied-ai/literature/ript-vla.meta.yaml   （sidecar：Agent 域）
+# kb/embodied-ai/literature/ript-vla.meta.yaml   （sidecar：仅 durable 记账，Agent 域）
 uid: k-7Q2M4XNAB1TE
 identity_key: "embodied-ai::literature::ript-vla"
 canonical_path: kb/embodied-ai/literature/ript-vla.md
@@ -424,9 +451,8 @@ content_hash: sha256:4d1a…
 ingested_at: 2026-07-31T00:00:00Z
 reviewed_at: 2026-08-03T00:00:00Z
 last_verified_at: 2026-07-31
-verification_debt_days: 187
-link_health: {internal: 12, broken: 0, external: 5, unchecked: 0}
-nightly_runs: [2026-08-08#a1b2c3]
+# 注意：verification_debt_days / link_health 属 derived/health/（可重建，不持久化）
+#       nightly_runs 属 operational history（reports/nightly/），均不写进 sidecar
 ```
 
 配套措施：
@@ -479,9 +505,10 @@ nightly_runs: [2026-08-08#a1b2c3]
 |---:|---|---|---|
 | L1 | C 的 front matter 里有 `uid`，且库中存在 | 确定 | **SAFE AUTO** 视为该文档更新 |
 | L2 | C 的 `identity_key` 命中现有文档 | 高 | **SAFE AUTO** |
+| L2.5 | C 携带 `based_on_content_hash` 且命中某文档 D 的 `content_hash`（即便 uid 未知） | 高 | **SAFE AUTO**（见 §8.2b Living Document Lineage Protocol） |
 | L3 | C 的路径/文件名命中 `canonical_path` 或 `previous_paths` | 高 | **SAFE AUTO** |
-| L4 | `title` + `type` + `domain` 完全一致 | 中 | **REQUIRES REVIEW**（`review/duplicates/`） |
-| L5 | 正文相似度（SimHash / shingle）≥ 阈值 | 低 | **REQUIRES REVIEW**，只给建议不落地 |
+| L4 | `title` + `type` + `domain` 完全一致（**无 uid / 无 based_on_content_hash 背书**） | 中 | **REQUIRES REVIEW**（`review/duplicates/`）——**弱启发式不得 SAFE AUTO** |
+| L5 | 正文相似度（SimHash / shingle）≥ 阈值 | 低 | **REQUIRES REVIEW**，只给建议不落地——**弱启发式不得 SAFE AUTO** |
 | L6 | 全不命中 | — | 视为新文档 → 分类 → 分配新 uid |
 
 > 「Linux/长期学习笔记.md 每天都出现一次新版本」这个场景由 **L2 + L3** 覆盖：
@@ -515,7 +542,7 @@ nightly_runs: [2026-08-08#a1b2c3]
 len_ratio      = len(C) / len(D)
 sections_lost  = |H2(D) \ H2(C)| / |H2(D)|
 opinion_lost   = 被删除内容中包含证据标记/观点标记的段落数
-base_match     = (C.based_on_hash == D.content_hash)
+base_match     = (C.based_on_content_hash == D.content_hash)
 ```
 
 | 类别 | 判定条件 | 处置 |
@@ -527,6 +554,24 @@ base_match     = (C.based_on_hash == D.content_hash)
 | **E. 异常截断** | `len_ratio < 0.6` 或 `sections_lost ≥ 0.3` | **FORBIDDEN 自动写入**。保留 canonical 原样，候选存 `review/conflicts/`，报告标红 |
 | **F. 观点删除** | `opinion_lost > 0` | **FORBIDDEN 自动写入**，无论 len_ratio 多大 |
 | **G. 并发冲突** | `base_match = false`（canonical 在 C 生成后被改过） | **REQUIRES REVIEW**，生成三方 diff |
+
+### 8.2b Living Document Lineage Protocol（候选溯源与信任分级）
+
+上表只判定「这次更新是安全还是破坏性」，本小节补上「**我们如何确信 C 就是 D 的更新**」——即 candidate 的溯源与信任分级：
+
+| 信号 | 字段 / 来源 | 信任级 | 自动处置 |
+|---|---|---|---|
+| **强（strong）** | C 的 front matter 含 `uid` 且库中存在（理想情况下 `based_on_content_hash == D.content_hash`） | 确定 | **SAFE AUTO** 视为该文档更新 |
+| **中（medium）** | `identity_key` 命中，或 C 携带 `based_on_content_hash` 命中某 D | 高 | **SAFE AUTO** |
+| **弱（weak）** | 仅有标题 / 路径 / 正文相似度等启发式（§7.3 L4/L5） | 低 | **禁止 SAFE AUTO**；一律进 `review/` 由人工裁决 |
+
+规则：
+
+1. `based_on_content_hash` 是候选**生成时**对其父版本的 `content_hash` 的声明，由 intake 比对；命中即获得 medium 级以上信任，**不依赖标题 / 路径巧合**。
+2. **弱启发式永远不得触发 SAFE AUTO**——即便 `title`+`type`+`domain` 完全一致，只要没有 `uid` 或 `based_on_content_hash` 背书，就只能 REQUIRES REVIEW（这是 §7.3 L4/L5 的硬性升级）。
+3. 强 / 中信任下**仍必须走 §8.2 的 A–G 内容分类**——防止「身份对了，但内容是被截断的破坏版」的情况。
+
+> 例子：用户在别处把 `Linux/长期学习笔记.md` 改完后整体丢进 inbox。若他**复制时连带复制了 front matter 的 `uid`**（或系统注入 `based_on_content_hash`），则 L1/L2.5 命中 → SAFE AUTO；若他只丢了一个同名文件、没带 uid，则 L4 命中 → 进 `review/duplicates/`，绝不自动覆盖。
 
 ### 8.3 异常截断的具体防护
 
@@ -610,18 +655,25 @@ V1 的 `READING_LOG.md` 属于后者的人工版本，V2 保留它作为 `log.re
 
 ### 10.1 受控词表（v1 版本，10 个，闭集）
 
-| relation | 语义 | 反向（派生，不存储） | Agent 权限 |
-|---|---|---|---|
-| `belongs_to` | 从属于某专题/领域节点 | `contains` | **SAFE AUTO** |
-| `derived_from` | 由某来源/文档派生 | `source_of` | **SAFE AUTO** |
-| `updates` | 同一来源的新版本 | `updated_by` | **SAFE AUTO**（仅 §9.2 情形） |
-| `related_to` | 弱相关（对称） | 自身 | **SAFE AUTO**（有上限，见下） |
-| `prerequisite_of` | 学习前置 | `requires` | REQUIRES REVIEW |
-| `extends` | 方法上的延伸 | `extended_by` | REQUIRES REVIEW |
-| `contrasts_with` | 同问题不同路线（对称） | 自身 | REQUIRES REVIEW |
-| `applies_to` | 方法应用于某问题/领域 | `applied_by` | REQUIRES REVIEW |
-| `supports` | 证据支持某结论 | `supported_by` | **仅用户** |
-| `contradicts` | 证据反对某结论（对称） | 自身 | **仅用户** |
+| relation | 语义 | 方向 | source 类型 | target 类型 | 反向（派生，不存储） | Agent 权限 |
+|---|---|---|---|---|---|---|
+| `belongs_to` | 从属于某专题/领域节点 | 多对一（子→父） | 任意知识对象 | topic / cluster / domain 节点 | `contains` | **SAFE AUTO** |
+| `derived_from` | 由某来源/文档派生 | 多对一（结果→源） | 知识对象 | source record / 父文档 | `source_of` | **SAFE AUTO** |
+| `related_to` | 弱相关（对称） | 对称 | 任意 | 任意 | 自身 | **SAFE AUTO**（有上限，见下） |
+| `prerequisite_of` | 学习前置 | 多对多（无环） | 概念/主题 | 概念/主题 | `requires` | REQUIRES REVIEW |
+| `extends` | 方法上的延伸 | 多对一 | 方法/技术 | 方法/技术 | `extended_by` | REQUIRES REVIEW |
+| `contrasts_with` | 同问题不同路线（对称） | 对称 | 方法/技术 | 方法/技术 | 自身 | REQUIRES REVIEW |
+| `applies_to` | 方法应用于某问题/领域 | 多对多 | 方法/技术 | 问题/领域 | `applied_by` | REQUIRES REVIEW |
+| `supports` | 证据支持某结论 | 多对一 | 文献/实验 | 结论/问题 | `supported_by` | **仅用户** |
+| `contradicts` | 证据反对某结论（对称） | 对称 | 文献/实验 | 结论/问题 | 自身 | **仅用户** |
+
+> **`updates` 已移除**：论文 / 来源的新版本不再用 relation 表达，而是记录在 `sources/registry/<id>.yaml` 的 `versions[]` 里（见 §9.2），避免「版本」与「关系」两套机制描述同一件事。
+
+**字段优先于关系（避免冗余）**：
+
+- **领域归属**用 `domain:` 字段表达，**不建** `in_domain` / `belongs_to_domain` 之类的关系；`belongs_to` 仅用于「文档 → 专题/簇」这种非领域层级的从属。
+- **来源链接**用 front matter 的 `sources[]` 表达，**不建** `cites` / `from_source` 关系；source registry 是来源的唯一真源。
+- **论文版本**用 registry 内 `versions[]` 表达（见 §9.2 / P1-2），不再用 `updates` 关系。
 
 ### 10.2 硬约束
 
@@ -695,7 +747,7 @@ kb/embodied-ai/topics/embodied-data-quality.md  (知识节点)
 |---|---|---|
 | `by-domain.md` | 域 → 簇 → 文档 | 新增，多领域必需 |
 | `by-type.md` | 类型 → 文档 | 取代 `docs/0X/README.md` 的手写条目表 |
-| `by-status.md` | current / unverified / disputed / superseded / historical | `status` 从未被有效利用 |
+| `by-status.md` | current / unverified / disputed / superseded / historical（按 `knowledge_status`） | `status` 从未被有效利用；`document_state` 单独管理文档生命周期 |
 | `by-title.md` | 全部标题 + 别名，按拼音/字母排序 | 「按名称查找」检索模式 |
 | `by-tag.md` | tag → 文档（**含归一化报告**） | tags 漂移 14→39 |
 | `by-source.md` | source → 引用它的知识节点 | 新增 |
@@ -708,8 +760,9 @@ kb/embodied-ai/topics/embodied-data-quality.md  (知识节点)
 索引生成必须满足：**同样输入连续跑两次，输出字节完全一致**。
 
 - 所有排序显式指定（uid 升序为最终 tiebreaker）；
-- 不写入运行时间到正文（只写在 `<!-- GENERATED -->` 头，且该头参与 diff 时可忽略——通过 `linguist-generated` 折叠）；
-- VALIDATE 阶段执行这项测试，失败则不提交。
+- 派生正文**不得包含任何易变字段**（运行时间、`run_id`、随机值、机器名等）。`<!-- GENERATED -->` 头只放稳定元数据（generator / inputs_hash / rebuild），且**确定性比对时整体排除该头**；
+- 易变运行信息只出现在 `reports/nightly/` 的 run report（operational history），不污染 Derived；
+- VALIDATE 阶段执行「连跑两次字节一致」测试，失败则不提交。
 
 > 依据：V1_INVENTORY §8 / R8——不确定的派生数据会让每晚都产生噪声 diff，最终导致用户不再审阅夜间提交，整个审计机制失效。
 
@@ -753,11 +806,11 @@ kb/embodied-ai/topics/embodied-data-quality.md  (知识节点)
 ```jsonc
 // derived/graph/graph.json
 {
-  "generated_at": "2026-08-08T03:12:04Z",
   "schema_version": 1,
   "nodes": [
     {"uid":"k-7Q2M4XNAB1TE","title":"RIPT-VLA 阅读笔记","type":"note.literature",
-     "domain":"embodied-ai","status":"current","cluster":"embodied-ai/ript-vla",
+     "domain":"embodied-ai","document_state":"active","knowledge_status":"current",
+     "cluster":"embodied-ai/ript-vla",
      "path":"kb/embodied-ai/literature/ript-vla.md",
      "sources":["arxiv-2505.17016"],"updated":"2026-08-03"}
   ],
@@ -794,6 +847,8 @@ kb/embodied-ai/topics/embodied-data-quality.md  (知识节点)
 
 图例：**A** = SAFE AUTO（可自动执行并提交）｜**R** = REQUIRES REVIEW（只能产出提议 / 写入 `review/`）｜**F** = FORBIDDEN
 
+> **本矩阵只列三类 Agent 角色（`default` / `nightly` / `migration`）。`human` 角色不受任何单元格限制**——用户可随时合并 nightly 分支、改写任何文件、修改 `schema/`。「红线」（§15.3）仅约束非人类角色。
+
 | # | 操作 | default | nightly | migration |
 |---:|---|:--:|:--:|:--:|
 | **来源（Source）** |
@@ -822,10 +877,10 @@ kb/embodied-ai/topics/embodied-data-quality.md  (知识节点)
 | 21 | 归一化已知 tag 拼写（映射表内） | R | **A** | **A** |
 | 22 | 新增 tag 值 | R | R | R |
 | **关系 / 分类** |
-| 23 | 添加 `belongs_to`/`derived_from`/`updates`/`related_to`(≤5) | R | **A** | **A** |
+| 23 | 添加 `belongs_to`/`derived_from`/`related_to`(≤5) | R | **A** | **A** |
 | 24 | 添加 `extends`/`contrasts_with`/`prerequisite_of`/`applies_to` | R | **R** | R |
 | 25 | 添加 `supports`/`contradicts` | **F** | **F** | **F** |
-| 26 | 新增关系类型 / 对象类型 / 领域（改 `schema/`） | **F** | **F** | **F** |
+| 26 | 新增关系类型 / 对象类型 / 领域（改 `schema/`） | **F** | **F** | **F**（注：Agent 自主改 schema FORBIDDEN；但**按已批准迁移 spec、在显式任务范围内**实施 schema 变更属 migration 任务的一部分，允许——见 `MIGRATION_PLAN_V2.md` §4） |
 | **派生（Derived）** |
 | 27 | 重建 `derived/**` 全部内容 | R | **A** | **A** |
 | 28 | 覆盖用户手改过的派生文件 | F | **F** | F |
@@ -844,17 +899,33 @@ kb/embodied-ai/topics/embodied-data-quality.md  (知识节点)
 | 39 | `push --force` / rebase / 改写历史 / 动 `.git/` | **F** | **F** | **F** |
 | 40 | 覆盖用户未提交的改动 / `stash` 用户工作 | **F** | **F** | **F** |
 
-### 15.3 五条绝对红线（任何角色、任何情况）
+### 15.3 五条绝对红线（约束**所有非人类角色**：`default` / `nightly` / `migration`；`human` 不受限）
 
 1. 不删除 `sources/`；
 2. 不改 `uid`；
 3. 不改写带观点标记的正文；
-4. 不合并到 `main`、不改写 Git 历史；
+4. **非人类角色**不合并到 `main`、不改写 Git 历史；（`human` 可随时合并 nightly 分支——nightly 分支永不自动合并，合并动作由用户执行）
 5. 不自行裁决冲突——冲突只能被**呈现**，不能被**解决**。
 
 ---
 
 ## 16. Nightly 状态机
+
+### 16.0 Inbox Transport Protocol（白天投放 → 夜间结算）
+
+`inbox/` 是用户白天随手丢文件的地方，它的写入**不要求整个仓库 clean**。传输协议规定：
+
+1. **允许**：`inbox/**` 下的新增（untracked）文件、以及 `inbox/` 自身的改动，合法地出现在 nightly 运行前的工作区中，PREFLIGHT **不因此 ABORT**。
+2. **禁止**：在 nightly 运行前，对以下**受保护区域**存在未提交的修改（staged 或 unstaged）：
+   - `kb/`、`docs/`（canonical 正文与 front matter）；
+   - `schema/`（受控词表，见 §2.2）；
+   - `maps/`、人工已裁决的 `review/` 结果；
+   - `sources/registry/`（来源登记是知识判断）。
+   这类修改说明用户正在手动编辑知识库，nightly 必须 ABORT（**绝不 stash** 用户工作），以免覆盖或冲突。
+3. `sources/files/` 的大字节（LFS）**不在此协议范围内**——nightly 永不触碰 LFS（§17.4）。
+4. 传输本身**只移动不删除**：APPLY 阶段先把 inbox 原件**复制**到目标 / 归档，确认成功后才删除源（§19）。
+
+> 这条协议同时满足了两条看似冲突的需求：用户可以随时往 inbox 丢东西；nightly 不会在用户正改知识库时莽撞运行。
 
 ### 16.1 状态图
 
@@ -884,7 +955,7 @@ stateDiagram-v2
 
 | 状态 | 做什么 | 失败时 | 幂等性来源 |
 |---|---|---|---|
-| **PREFLIGHT** | 检查 `git status` 干净、无并发锁、`origin/main` 可达、分支名可用 | **直接 ABORT，零改动**（绝不 stash 用户工作） | 只读 |
+| **PREFLIGHT** | 检查 Inbox Transport Protocol（§16.0）：`inbox/**` 合法新增允许；受保护区域（`kb/`、`docs/`、`schema/`、`maps/`、`sources/registry/`、`review/` 裁决结果）有未提交修改则 ABORT；另查无并发锁、`origin/main` 可达、分支名可用、无未解决的 nightly 运行（single-flight，§16.3） | **直接 ABORT，零改动**（绝不 stash 用户工作） | 只读 |
 | **SCAN** | 枚举 `inbox/**` + 自上次 run 以来变化的 `kb/**` | 重试 3 次后 ABORT | 只读 |
 | **IDENTIFY** | 执行 §7.3 身份解析级联 | 单项失败 → 该项转 `review/ambiguous/`，不影响其他项 | 输入哈希决定输出 |
 | **CLASSIFY** | 判定 domain / type / cluster；应用 `intake-rules.yaml` 的五分类处置 | 置信不足 → `review/ambiguous/` | 规则表纯函数 |
@@ -892,21 +963,27 @@ stateDiagram-v2
 | **DETECT_UPDATE** | 执行 §8.2 分类（A–G） | E/F/G → `review/conflicts/`，canonical 零改动 | 基于内容哈希 |
 | **ROUTE** | 把每一项分派到 `auto` / `ambiguous` / `conflicts` / `duplicates` / `deferred` | — | 纯分派 |
 | **APPLY** | 写 canonical、写 sidecar、移动 inbox 原件到 `sources/files/` 或 `archive/inbox/<date>/` | 中途失败 → 记录已完成项到 `run-state.json`，下次从断点继续 | **`(inbox_hash, canonical_hash)` 对已处理过则跳过** |
-| **REBUILD_DERIVED** | 删除 `derived/**` 并全量重建 | 失败 → 保留上次派生内容，标记 `derived_stale` | 全量重建天然幂等 |
+| **REBUILD_DERIVED** | 在**临时目录**生成全部派生内容 → 对临时产物做 schema / 链接 / **确定性（连跑两次字节一致）** 校验 → 校验通过才**原子替换** `derived/`（先写临时区，再整体 swap） | 失败 → 保留旧 `derived/`，不触碰它，标记 `derived_stale`；临时区丢弃 | 全量重建天然幂等；原子 swap 保证 `derived/` 永远是「上一次完整成功」状态，绝不暴露半成品 |
 | **VALIDATE** | schema 校验 / uid 唯一性 / 关系目标存在 / 链接可达 / 派生确定性（连跑两次一致） / 无红线违规 | → ROLLBACK | 只读 |
-| **ROLLBACK** | `git reset --hard` **到本次 nightly 分支的起点**（起点 = `origin/main`），删除分支 | — | main 从未被触及，故安全 |
+| **ROLLBACK** | `git reset --hard` **到本次 nightly 分支的起点**（起点 = `origin/main`）；分支可删除，但**审计记录必须保留**（见下） | — | main 从未被触及，故安全 |
 | **COMMIT** | 按 §17 的分层提交 | 失败 → ROLLBACK | 提交前重算，已提交则跳过 |
-| **REPORT** | 生成 `derived/reports/nightly/YYYY-MM-DD.md` | 尽力而为 | — |
+| **REPORT** | 生成 `reports/nightly/YYYY-MM-DD.md`（Operational History，非 Derived） | 尽力而为 | — |
 
-### 16.3 重复运行与分支已存在
+**失败 Run 的审计保留**：无论 ROLLBACK 还是 ABORT，nightly **必须**在 `reports/nightly/` 下保留一条失败 / 中断记录（即使本次运行未产生任何提交），至少包含：`run_id`、触发时间、`attempted_plan`、失败的 phase、`validation_errors`、受影响的对象（含已识别但未被落地的候选）。分支可被删除，但**审计记录永不删除**——这是「任何 Agent 写入都必须可审计、可回滚」（不变量 #4）的落地。
+
+### 16.3 重复运行与 single-flight
+
+Nightly 采用 **single-flight** 模型：**任何时刻最多只有 1 个「未解决（unresolved）」的 nightly 分支 / 运行**。
 
 | 情形 | 行为 |
 |---|---|
-| 同一天第二次运行，上次 DONE | 新建 `nightly/2026-08-08-run-2`，从 `origin/main` 起 |
-| 同一天第二次运行，上次 ABORTED（未产生提交） | 复用同名分支 |
-| 同一天第二次运行，上次在 APPLY 中断 | 读 `run-state.json`，复用分支，从断点续跑 |
+| 当前没有任何未解决的 nightly 运行 | 新建 `nightly/<date>`，从 `origin/main` 起 |
+| 已存在一个未解决的 nightly 分支（无论停在 PREFLIGHT / SCAN / … / APPLY 中断，还是 ABORTED 但未清理） | 新触发的运行 **ABORT（或 BLOCK）** 并明确提示：先处理 / 显式丢弃已有的 unresolved 运行，再发起新的——**绝不并行启动第二个** |
+| 上次运行已 DONE（分支已关闭，或已交人工审阅） | 视为「无未解决运行」，允许发起下一次 |
 | inbox 里是昨天已处理过的同一文件 | 幂等键命中 → 跳过，报告中记为 `no-op` |
 | 分支名冲突且状态文件不匹配 | ABORT 并要求人工介入（宁可不做，不猜） |
+
+> single-flight 消除了「同一天第二次运行从 `origin/main` 起新建 run-2」的旧设计——那会让两个 nightly 分支同时指向 main，回滚与审阅都失去唯一锚点。
 
 `run-state.json` 位于 `.curator/`（**gitignore**，属运行时状态，不是知识）。
 
@@ -914,6 +991,7 @@ stateDiagram-v2
 
 ```markdown
 # Nightly Curation Report — 2026-08-08 (run a1b2c3)
+<!-- 位置：reports/nightly/2026-08-08.md — Operational History，非 Derived -->
 
 ## 摘要
 处理 7 项 | 自动落库 4 | 待裁决 3 | 冲突 1 | 用时 00:02:41 | 分支 nightly/2026-08-08
@@ -1039,6 +1117,8 @@ Update-Classes: A, B
 | 7 | **试点**：`embodied_data_quality` 一个簇注入 uid（5 个文档，正文零改动） | 小样本验证 uid 方案，diff 可控 |
 | 8 | `tools/curate.py --dry-run`：走完 SCAN→ROUTE，**只出报告，不写 kb/** | 在赋予写权限之前，先观察它的判断质量若干天 |
 
+> 上表 8 项交付物共同构成 **Foundation MVP（Checkpoint A）= 迁移计划的 M2**：全部为纯新增 / 只读，零风险。其中第 8 项（`curate.py --dry-run`）是 **Curator Dry-run MVP = M5** 的前置，但 dry-run 本身在 M2 阶段即可先行观察。
+
 ### 20.2 MVP 明确不做
 
 - ✗ 移动 / 重命名 `docs/` 下任何文件（`kb/` 只放新内容）
@@ -1056,7 +1136,9 @@ Update-Classes: A, B
 ### 20.3 从 MVP 到完整体的开关顺序
 
 ```text
-阶段 0  MVP：只读健康检查 + dry-run 分诊报告
+Foundation MVP（Checkpoint A）= M2：只读健康检查 + 派生索引（不写任何 canonical）
+   ↓ 观察 ≥ 2 周，健康报告误报率可接受
+Curator Dry-run MVP = M5：nightly 走完 SCAN→ROUTE，**只出分诊报告，不写 kb/**
    ↓ 观察 ≥ 2 周，分诊准确率可接受
 阶段 1  允许 nightly 写 derived/ + sidecar（不碰 canonical 正文）
    ↓ 观察，确认派生确定性与提交噪声可接受
@@ -1066,6 +1148,8 @@ Update-Classes: A, B
    ↓
 阶段 4  评估是否允许「用户确认后自动合并」——**默认永不开启**
 ```
+
+> 术语对齐：本设计的「MVP」统一映射到迁移计划的两个 Checkpoint——**Foundation MVP（只读健康层）= M2**，**Curator Dry-run MVP = M5**（详见 `MIGRATION_PLAN_V2.md` §4）。其余阶段沿用 M3/M4/M6/M7 命名，避免「阶段 0/1/2」与「M0–M7」两套编号混用。
 
 每一级开关都写在 `schema/` 或配置里，可随时关回去。
 
@@ -1107,17 +1191,20 @@ Update-Classes: A, B
 
 ## 23. 待用户确认的开放问题
 
-见 `MIGRATION_PLAN_V2.md` §7 与本轮最终汇报。核心 6 项：
+见 `MIGRATION_PLAN_V2.md` §7（Q1–Q12）。核心 6 项：
 
-1. `kb/` 与 `docs/` 的最终关系：`docs/` 是长期共存、还是最终整体迁入 `kb/embodied-ai/`？
-2. 是否接受 sidecar（方案 C）？还是坚持纯 front matter（方案 A）+ 仅靠提交分层来解耦 diff？
-3. uid 注入的批次策略：一次性 63 个文件，还是按簇分 5–6 批？
-4. `RESEARCH_MAP.md` 的分解是否现在做（M5），还是等 `kb/` 有实际内容后再做？
-5. `MIGRATION_BACKLOG.md` / `MIGRATION_CHECKLIST.md` 归档时机与形态。
-6. nightly 是真的定时运行，还是「用户想跑时手动触发」？（影响是否需要调度器）
+1. `kb/` 与 `docs/` 的最终关系：`docs/` 是长期共存、还是最终整体迁入 `kb/embodied-ai/`？（Q1）
+2. 是否接受 sidecar（方案 C）？还是坚持纯 front matter（方案 A）+ 仅靠提交分层来解耦 diff？（Q2。注：本轮已把 `document_state`/`knowledge_status` 双轴与 durable/derived 元数据划分从 sidecar 决策中解耦，二者正交，不影响本问题本身）
+3. uid 注入的批次策略：一次性 63 个文件，还是按簇分 5–6 批？（Q3）
+4. `RESEARCH_MAP.md` 的分解是否现在做（M6），还是等 `kb/` 有实际内容后再做？（Q4）
+5. `MIGRATION_BACKLOG.md` / `MIGRATION_CHECKLIST.md` 归档时机与形态。（Q9）
+6. nightly 是真的定时运行，还是「用户想跑时手动触发」？（Q6。注：本轮已确立 single-flight 模型，定时触发下仍需保证「同一时刻仅一个 unresolved 运行」）
+
+> **本轮（v2-rev1）已闭环的设计协议问题（不再作为开放问题）**：P0-1 双轴 status、P0-2 Inbox Transport Protocol、P0-3 Living Document Lineage Protocol、P0-4 Nightly single-flight、P0-5 Derived 确定性、P0-6 报告独立为 Operational History 平面、P1-1 durable/derived 元数据重划、P1-2 Relation 实体类型化、P1-3 权限矩阵内部矛盾、P1-4 Derived 重建事务语义、P1-5 失败 Run 审计保留、P1-6 MVP 术语统一。详见 §24 更新记录与本 PR 的修正汇报。
 
 ---
 
 ## 24. 更新记录
 
 - 2026-08-07：建立 V2 架构提案（Phase 1）。基于 `V1_INVENTORY.md` 的实测审计，给出 22 项设计要点、front matter vs sidecar 专项论证、40 行权限矩阵、11 状态 nightly 状态机、分层 Git 事务模型、MVP 边界与 12 项设计风险。**本轮为设计文档，未实施任何结构变更。**
+- 2026-08-07（rev1）：**架构协议缺陷定向修正（Architecture Protocol Fixes，非重新设计）**。依据独立架构审查意见，闭环 6 个 P0 与 6 个 P1 协议级矛盾/缺口：P0-1 单一 `status` 正交拆为 `document_state`（生命周期）× `knowledge_status`（认识论）双轴；P0-2 新增 §16.0 Inbox Transport Protocol；P0-3 新增 §8.2b Living Document Lineage Protocol（强/中/弱信任分级，弱启发式禁 SAFE AUTO）；P0-4 Nightly 改为 single-flight；P0-5 移除 Derived 中的 `run_id`/`generated_at`，确立「派生=输入确定性纯函数」；P0-6 Nightly Report 移出 Derived，独立为 Operational History 平面 `reports/nightly/`；P1-1 重划 durable/derived 元数据（sidecar 仅留 durable，健康指标进 `derived/health/`）；P1-2 Relation 实体类型化并移除冗余 `updates`；P1-3 修正权限矩阵（红线仅约束非人类角色、human 可合并 main、schema 按已批准 spec 实施允许）；P1-4 Derived 重建改为临时目录+校验+原子 swap；P1-5 失败 Run 审计保留；P1-6 统一 MVP 术语（Foundation MVP=M2，Curator Dry-run=M5）。**未进入 Phase 2，未改动 V1，未实施任何迁移，未实现 Nightly，未注入 UID。** 同步更新 `V1_TO_V2_MAPPING.md` 与 `MIGRATION_PLAN_V2.md`。

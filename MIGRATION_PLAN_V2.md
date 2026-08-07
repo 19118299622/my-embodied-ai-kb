@@ -30,7 +30,7 @@ tags:
 | 2 | **V1 与 V2 短期共存** | `docs/` 与 `kb/` 并行；派生索引从第一天同时覆盖两侧，用户只看一个索引 |
 | 3 | **不破坏 Git 历史** | 只增量提交；不 rebase、不 amend、不 force push、不改写历史 |
 | 4 | **不删 `MIGRATION_BACKLOG.md` / `MIGRATION_CHECKLIST.md`** | 全程保留；`MIGRATION_CHECKLIST §1` 反而升格为 `schema/intake-rules.yaml` 的来源 |
-| 5 | **知识判断的最终控制权属于用户** | 所有 A0/A1 项必须人工确认；nightly 分支**永不自动合并 main** |
+| 5 | **知识判断的最终控制权属于用户** | 所有 A0/A1 项必须人工确认；nightly 分支**永不自动合并 main**（但 `human` 可随时手动合并 nightly 分支——合并动作由用户执行） |
 
 > 补充约束（来自 V1_INVENTORY D2）：**V1 只有 2 次提交，文档级历史事实上不存在**。这意味着「出错了用 Git 回滚单个文档」这条安全网在 V1 内容上是失效的。因此**越早期的阶段，越必须只读**。
 
@@ -150,7 +150,7 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 
 ---
 
-### M2 — 只读健康层（**建议的 MVP 终点**）
+### M2 — 只读健康层（**Foundation MVP = Checkpoint A，建议的 MVP 终点**）
 
 | 项 | 内容 |
 |---|---|
@@ -174,7 +174,7 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | 项 | 内容 |
 |---|---|
 | **目标** | 用 5 个文件验证 uid + sidecar + 新类型三件事 |
-| **交付物** | 5 个文件的 front matter 注入 `uid` / `domain` / `type`(新值) / `status`(新值) / `cluster`；5 个 `.meta.yaml` sidecar；`PAPER_MATRIX.md` 的**派生版原型**（与手工版并列，供对比）；`.gitattributes` 增加 `*.meta.yaml linguist-generated=true` |
+| **交付物** | 5 个文件的 front matter 注入 `uid` / `domain` / `type`(新值) / `document_state`(新值) / `knowledge_status`(新值) / `cluster`；5 个 `.meta.yaml` sidecar（仅 durable 字段）；`PAPER_MATRIX.md` 的**派生版原型**（与手工版并列，供对比）；`.gitattributes` 增加 `*.meta.yaml linguist-generated=true` |
 | **触碰的已有文件** | 5（**仅 front matter，正文字节零改动**） |
 | **Agent 可做** | uid 生成、sidecar 生成、type/status 机械映射（A2 → 落 nightly 分支等审） |
 | **必须人工** | `plan.learning` / `log.reading` 两个新类型是否成立；`PAPER_MATRIX` 是否接受派生版取代手工版（A0） |
@@ -201,12 +201,12 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 
 ---
 
-### M5 — dry-run 策展（观察期）
+### M5 — dry-run 策展（**Curator Dry-run MVP，观察期**）
 
 | 项 | 内容 |
 |---|---|
 | **目标** | 在赋予任何写权限之前，先看它判断得准不准 |
-| **交付物** | `tools/curate.py --dry-run`：走完 SCAN → IDENTIFY → CLASSIFY → ASSOCIATE → DETECT_UPDATE → ROUTE，**只出报告，不写 `kb/`**；`derived/reports/nightly/YYYY-MM-DD.md` |
+| **交付物** | `tools/curate.py --dry-run`：走完 SCAN → IDENTIFY → CLASSIFY → ASSOCIATE → DETECT_UPDATE → ROUTE，**只出报告，不写 `kb/`**；`reports/nightly/YYYY-MM-DD.md`（Operational History，非 Derived） |
 | **触碰的已有文件** | **0** |
 | **Agent 可做** | 全部（只读） |
 | **必须人工** | 每天扫一眼分诊报告，标记误判 |
@@ -273,7 +273,7 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | `type` / `status` 的机械值映射 | A2 | 映射表已确认（`V1_TO_V2_MAPPING §5.3/5.4`） |
 | 在 `inbox/` 中识别 L1–L3 身份命中 | A2 | dry-run 期误判率可接受 |
 | 追加型 living 更新（V2 §8.2 类别 A） | A2 | M5 观察期结束后才开启 |
-| 生成夜间报告 | A3 | — |
+| 生成夜间报告（`reports/nightly/`，非 Derived） | A3 | — |
 
 ### 5.2 必须人工审核的（A0/A1）
 
@@ -339,17 +339,17 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | # | 问题 | 选项 | 推荐默认 | 影响的阶段 |
 |---:|---|---|---|---|
 | Q1 | **`docs/` 与 `kb/` 的最终关系**：长期共存，还是最终全部迁入 `kb/embodied-ai/`？ | (a) 长期共存，使用时才迁 (b) 设定期限全量迁完 | **(a)**——V1 的「使用时迁移」原则已被验证有效，且全量迁移会产生一次巨大 diff | M7 |
-| Q2 | **是否接受 sidecar（方案 C）**，还是坚持纯 front matter（方案 A）+ 仅靠提交分层解耦 diff？ | (a) 方案 C (b) 方案 A | **(a)**——但如果你重视「一个文件看到全部信息」，方案 A + 严格提交分层也能工作，代价是 living document 的 diff 噪声 | M3 起 |
+| Q2 | **是否接受 sidecar（方案 C）**，还是坚持纯 front matter（方案 A）+ 仅靠提交分层解耦 diff？（注：双轴 status 与 durable/derived 划分已与 sidecar 决策解耦，二者正交） | (a) 方案 C (b) 方案 A | **(a)**——但如果你重视「一个文件看到全部信息」，方案 A + 严格提交分层也能工作，代价是 living document 的 diff 噪声 | M3 起 |
 | Q3 | **uid 注入批次**：63 个文件一次性注入，还是按簇分 5–6 批？ | (a) 分批 (b) 一次性 | **(a)**——一次性会产生一个 63 文件的 diff，污染 `git blame`，且错了不好定位 | M3 / M4 |
 | Q4 | **`RESEARCH_MAP.md` 何时分解**：现在（M6），还是等 `kb/` 有实际内容后？ | (a) M6 按计划 (b) 推迟到 M7 之后 | **(a)**——五个开放问题现在就无法被引用，这是当前最实际的损失 | M6 |
 | Q5 | **`01_foundations/reinforcement_learning/` 归哪个领域？** | (a) `embodied-ai`（服务于 VLA 后训练） (b) `machine-learning`（RL 是通用方法） | **(b)**——它同时被 VLA 和通用 ML 使用，放 `machine-learning` 更符合 T 型结构；用 `relations: prerequisite_of` 连回 embodied-ai | M7 |
-| Q6 | **nightly 是定时运行还是手动触发？** | (a) 手动触发 (b) 定时（需调度器） | **(a)**——MVP 阶段先手动跑，观察若干次；定时会让「没人看报告」的风险提前到来 | M5 |
+| Q6 | **nightly 是定时运行还是手动触发？**（注：本轮已确立 single-flight，定时触发下仍需保证「同一时刻仅一个 unresolved 运行」） | (a) 手动触发 (b) 定时（需调度器） | **(a)**——MVP 阶段先手动跑，观察若干次；定时会让「没人看报告」的风险提前到来 | M5 |
 | Q7 | **`PAPER_MATRIX.md` 若无法完整派生怎么办？** | (a) 降级为 `synthesis.topic`，承认它是人的判断 (b) 强行拆成元数据字段 | **(a)**——如果矩阵里有对比判断，那它就不是索引 | M3（这是 M3 的关键检验） |
 | Q8 | **`sources/files/` 里的 PDF 是入 LFS 还是 gitignore？** | (a) 继续 LFS（现状，9 个对象） (b) 改为 gitignore + 只留 registry | **(a)**——现状已验证可用，改动无收益且有风险 | M4 / M7 |
 | Q9 | **`MIGRATION_BACKLOG.md` / `MIGRATION_CHECKLIST.md` 的归档时机与形态？** | (a) 保持原状不动 (b) 完成后移入 `archive/` | **(a)**——它们还在服役（历史材料迁移未完成） | 全程 |
-| Q10 | **MVP 停在哪一步？** | (a) M2（只读健康层）后暂停两周 (b) 直接做到 M3 (c) 一路做到 M5 | **(a)**——M2 零风险、收益立刻可见，是最合适的观察点 | 全局 |
+| Q10 | **MVP 停在哪一步？**（术语：Foundation MVP = M2 只读健康层；Curator Dry-run MVP = M5） | (a) M2（Foundation MVP）后暂停两周 (b) 直接做到 M3 (c) 一路做到 M5（Curator Dry-run MVP） | **(a)**——M2 零风险、收益立刻可见，是最合适的观察点 | 全局 |
 | Q11 | **本轮 4 份设计文档最终放哪？** | (a) 留在根目录 (b) 移入 `docs/_meta/` (c) 移入 `kb/agent-engineering/` | **(c)**——它们本身就是 agent-engineering 领域的知识，可作为该领域的首批内容 | M6 |
-| Q12 | **`derived/` 是否入 Git？** | (a) 入（GitHub 上可直接浏览索引） (b) 不入（本地生成） | **(a)**——个人库的一大价值是手机上打开 GitHub 就能查；用 `linguist-generated` 折叠 diff 噪声 | M2 |
+| Q12 | **`derived/` 是否入 Git？**（注：nightly 报告已独立为 `reports/`，不随 derived 入 Git 策略变化；`reports/` 单独决定） | (a) 入（GitHub 上可直接浏览索引） (b) 不入（本地生成） | **(a)**——个人库的一大价值是手机上打开 GitHub 就能查；用 `linguist-generated` 折叠 diff 噪声 | M2 |
 
 ---
 
@@ -364,3 +364,4 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 ## 9. 更新记录
 
 - 2026-08-07：建立 V2 迁移计划（Phase 1c）。定义 5 条约束、10 类先不迁内容、主/次试点及其选择理由、M0–M7 八个阶段（含目标 / 交付物 / 触碰文件 / 退出条件 / 回滚 / diff 预算）、自动化分级执行清单（A3/A2 十项、A0/A1 十五项）、7 项验证与 6 类回滚路径、12 个待用户确认问题（含推荐默认值）。**本轮为设计文档，未执行任何迁移。**
+- 2026-08-07（rev1）：**同步 V2 架构提案的协议缺陷修正**。M2/M5 标题对齐术语（Foundation MVP = M2，Curator Dry-run MVP = M5）；M3 字段列表改为双轴 `document_state`/`knowledge_status` 且 sidecar 仅 durable；M5 与 §5.1 的 nightly 报告路径改为 `reports/nightly/`（非 Derived）；§1 约束 5 明确 human 可手动合并 nightly 分支；§7 的 Q2/Q6/Q10/Q12 补充本轮修正说明。**未执行任何迁移。**
