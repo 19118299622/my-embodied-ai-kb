@@ -165,6 +165,8 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 
 > **这是投入产出比最高的一步**：不改任何内容，就把 21 条断链、5 条越界链接、39 个 tag 的漂移、12 个孤儿、`PROJECT_INVENTORY` 的过期全部变成可见清单。
 >
+> **M2 = Read-only Observation Checkpoint（rev2 明确）**：不移动 `docs/`、不修改 V1 canonical knowledge、不注入既有文档 UID、不批量生成 sidecar、不执行 semantic curator、不自动修改 canonical。它只是「照亮问题」，不是「开始整理」。
+>
 > **建议：MVP 就停在这里，先用两周。** 如果两周后用户没打开过 `derived/health/`，说明整个 V2 的价值假设需要重估（V2 §22 风险 1 的早期信号）。
 
 ---
@@ -206,7 +208,7 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | 项 | 内容 |
 |---|---|
 | **目标** | 在赋予任何写权限之前，先看它判断得准不准 |
-| **交付物** | `tools/curate.py --dry-run`：走完 SCAN → IDENTIFY → CLASSIFY → ASSOCIATE → DETECT_UPDATE → ROUTE，**只出报告，不写 `kb/`**；`reports/nightly/YYYY-MM-DD.md`（Operational History，非 Derived） |
+| **交付物** | `tools/curate.py --dry-run`：走完 SCAN → IDENTIFY → CLASSIFY → ASSOCIATE → DETECT_UPDATE → ROUTE，**只出报告，不写 `kb/`**；`reports/nightly/YYYY-MM-DD/<run-id>.md`（Operational History，非 Derived，按 run-id 唯一命名） |
 | **触碰的已有文件** | **0** |
 | **Agent 可做** | 全部（只读） |
 | **必须人工** | 每天扫一眼分诊报告，标记误判 |
@@ -270,10 +272,11 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 | 修复 21 条机械断链（相对路径重算） | A2 | 人工确认修复规则一次，之后批量 |
 | 注入 `uid`（front matter 追加一行） | A2 | 提供「正文字节未变」的 hash 证据 |
 | 生成 / 更新 sidecar | A2 | — |
-| `type` / `status` 的机械值映射 | A2 | 映射表已确认（`V1_TO_V2_MAPPING §5.3/5.4`） |
+| `type` / `status`(生命周期轴 `document_state`) 的机械值映射 | A2 | 映射表已确认（`V1_TO_V2_MAPPING §5.3/5.4`）；注意 `knowledge_status`(认知轴) 需语义判断，降为 A1，不得纯机械推断为 `current`（保守迁移，见 R2-7） |
 | 在 `inbox/` 中识别 L1–L3 身份命中 | A2 | dry-run 期误判率可接受 |
 | 追加型 living 更新（V2 §8.2 类别 A） | A2 | M5 观察期结束后才开启 |
 | 生成夜间报告（`reports/nightly/`，非 Derived） | A3 | — |
+| **遵守 nightly single-flight（rev2）** | — | 同一时刻仅允许 **1 个 unresolved** nightly 分支；「等待人工 review」**不算 resolved**，新运行必须 BLOCK/ABORT；禁止并行 nightly 分支 / 堆叠 PR / 自动 rebase / 自动 merge（见 `V2 §16.3`） |
 
 ### 5.2 必须人工审核的（A0/A1）
 
@@ -365,3 +368,4 @@ M7  逐簇迁入 kb/      长期        使用时迁移，无终点压力
 
 - 2026-08-07：建立 V2 迁移计划（Phase 1c）。定义 5 条约束、10 类先不迁内容、主/次试点及其选择理由、M0–M7 八个阶段（含目标 / 交付物 / 触碰文件 / 退出条件 / 回滚 / diff 预算）、自动化分级执行清单（A3/A2 十项、A0/A1 十五项）、7 项验证与 6 类回滚路径、12 个待用户确认问题（含推荐默认值）。**本轮为设计文档，未执行任何迁移。**
 - 2026-08-07（rev1）：**同步 V2 架构提案的协议缺陷修正**。M2/M5 标题对齐术语（Foundation MVP = M2，Curator Dry-run MVP = M5）；M3 字段列表改为双轴 `document_state`/`knowledge_status` 且 sidecar 仅 durable；M5 与 §5.1 的 nightly 报告路径改为 `reports/nightly/`（非 Derived）；§1 约束 5 明确 human 可手动合并 nightly 分支；§7 的 Q2/Q6/Q10/Q12 补充本轮修正说明。**未执行任何迁移。**
+- 2026-08-07（rev2）：**同步 V2 架构提案的协议边界收尾（R2 系列）**。M2 追加「Read-only Observation Checkpoint」说明（不移动 docs / 不改 V1 canonical / 不注入 UID / 不批量 sidecar / 不执行 semantic curator）；M5 nightly 报告路径改为 `reports/nightly/YYYY-MM-DD/<run-id>.md`（按 run-id 唯一命名）；§5.1 新增 single-flight 约束行（`knowledge_status` 认知轴映射降为 A1 语义判断，非纯机械 A2），并标注 nightly single-flight「等待人工 review 不算 resolved」。**未执行任何迁移。**

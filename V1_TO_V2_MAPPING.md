@@ -231,30 +231,35 @@ V1 的 `INDEX.md` 同时承担两种互斥职责（I9 / D8 同源问题）：
 | — | `RESEARCH_MAP §4` 的 5 个开放问题 | **`hypothesis.question`**（新增） | 见 §7 | **A0** |
 | — | `分层阅读计划.md` / `学习规划与进度.md` | **`plan.learning`** | V1 用 `topic`/`foundation` 凑合 | **A1** |
 
-### 5.4 `status` 取值映射（V1 单一 `status` → V2 双正交轴）
+### 5.4 `status` 取值映射（V1 单一 `status` → V2 双正交轴，保守迁移）
 
-V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论状态」，导致两者都无法被清晰使用（D9）。V2 拆成两个正交字段：
+V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论状态」，导致两者都无法被清晰使用（D9）。V2 拆成两个正交字段。
 
-**轴一 `document_state`（生命周期）**
+> **保守迁移铁律（rev2 / R2-7）**：自动迁移**不得**自动提升知识的认识论可信度。`V1 active` 表示「文档当前处于活跃维护状态」，**不等于** `knowledge_status: current`（「里面承载的知识已被认为当前有效」）。凡无法证明 `knowledge_status` 的，**默认 `unverified`**，且该判断需要语义判断，**不得列为纯机械 A2 自动迁移**（降为 A1）。
+
+**轴一 `document_state`（生命周期）——可机械映射**
 
 | V1 值 | 实际使用 | V2 `document_state` | 自动化 |
 |---|---|---|---|
 | `stable` | **0 次** | `stable`（保留——它本就属于生命周期轴，只是 V1 错放在 status 里） | — |
 | `archived` | **0 次** | `archived`（保留，语义=停止主动维护） | — |
-| `active` | 大量 | `active`（同时映射到 knowledge_status 的 `current`，见下） | **A2** |
-| — | — | `draft` / `frozen`（新增） | — |
+| `active` | 大量 | `active` | **A2**（机械） |
+| `seed` | 大量 | `draft`（初稿未成熟，符合 V1 `seed` 本意） | **A2**（机械） |
+| — | — | `frozen`（新增） | — |
 
-**轴二 `knowledge_status`（认识论）**
+**轴二 `knowledge_status`（认识论）——需语义判断，默认 `unverified`**
 
-| V1 值 | 实际使用 | V2 `knowledge_status` | 自动化 |
+| V1 值 | V2 `knowledge_status` | 自动化 | 说明 |
 |---|---|---|---|
-| `seed` | 大量 | `unverified` | **A2** |
-| `active` | 大量 | `current` | **A2** |
-| — | — | `disputed`（新增） | **A1**（Agent 只能提议） |
-| — | — | `superseded`（新增，需 `superseded_by`） | **A0** |
-| — | — | `historical`（新增） | **A0** |
+| `seed` | `unverified` | **A1**（语义判断） | 初稿天然未核验 |
+| `active` | **默认 `unverified`**；仅当文档已有明确证据（已 review / 已核验 / 显式标 current）才升为 `current` | **A1**（语义判断） | **`active` ≠ `current`**——活跃维护不代表知识已被确认有效 |
+| `stable` | `unverified`（除非有证据） | **A1**（语义判断） | `stable` 描述内容成熟度，不自动等于认知有效 |
+| `archived` | `unverified`（除非有证据） | **A1**（语义判断） | **`archived` ≠ `historical`**：文档可能只是「不再维护」，但其中知识仍可 `current`；二者正交，不得由 archived 推断 |
+| — | `disputed`（新增） | **A1**（Agent 只能提议） | |
+| — | `superseded`（新增，需 `superseded_by`） | **A0** | |
+| — | `historical`（新增） | **A0** | |
 
-> 两轴正交：`active` 文档可同时是 `unverified`（刚写完还没核验）或 `current`（已确认）。V1 的 `stable` / `archived` **不再废弃**，而是归入 `document_state`——这是本轮（v2-rev1）对 P0-1 的修正。
+> 两轴正交：`active` 文档可同时是 `unverified`（刚写完还没核验）或 `current`（已确认）。V1 的 `stable` / `archived` **不再废弃**，而是归入 `document_state`——这是 rev1 对 P0-1 的修正；rev2 进一步规定 `knowledge_status` 不得被自动推断为 `current`（R2-7）。
 
 ### 5.5 `tags` 归一化（39 → 受控集）
 
@@ -278,7 +283,7 @@ V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论�
 | V1 隐含设计 | V1 形态 | V2 机制 | 是否保留原语义 | 自动化 |
 |---|---|---|---|---|
 | I1 证据强度标注 `[PAPER]/[RESULT]/[INFERENCE]/[OPEN]` | 写作规范（D6 全文使用） | **升格为 Agent 写保护边界**：带 `[INFERENCE]` / `[OPEN]` 的段落进入不可自动改写集合（V2 §8.4） | **完全保留并强化** | **A0**（保护规则本身不可自动放宽） |
-| I2 核验日期 | 被动字段 `read_date` / 正文「核验日期：」 | `last_verified_at` + `temporal_class` → `verification_debt` → `derived/health/stale.md` | 保留并变为主动 | **A3**（计算债务） |
+| I2 核验日期 | 被动字段 `read_date` / 正文「核验日期：」 | `last_verified_at` + `temporal_class` → `verification_due_at = last_verified_at + SLA`（确定性）→ `derived/health/stale.md` 记录 `stale/not-stale` | 保留并变为主动；不依赖隐式系统时间 | **A3**（计算 due_at，确定性） |
 | I3 迁移溯源 | `migrate_source` 字段 + 正文引用块 | `previous_paths[]` + `relations: derived_from` | 保留 | **A2** |
 | I4 Source / Knowledge 分离 | 「PDF 不进 git，只建索引」的默认实践 | `sources/registry` + `sources/files` 显式两层 | 保留并命名 | **A1** |
 | I5 双文档 living 模式 | `学习规划与进度.md` + `长期学习笔记.md` | 正式化为 `plan.learning` + `note.concept` 配对（V2 §8.5） | **保留，且被指定为 living document 的原型** | **A1** |
@@ -370,7 +375,7 @@ V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论�
 | 等级 | 涉及项数（本表） | 典型代表 | 共同特征 |
 |---|---:|---|---|
 | **A3 完全自动** | 9 | 派生索引、健康报告、复验债务计算、孤儿检测、Git 配置 | 纯派生，可重建，零损失 |
-| **A2 自动 + 分支等待 review** | 21 | uid 注入、type/status 机械映射、断链修复、`updated` 维护 | 机械规则，可逆，但触碰 canonical |
+| **A2 自动 + 分支等待 review** | 21 | uid 注入、type 机械映射、断链修复、`updated` 维护 | 机械规则，可逆，但触碰 canonical（注：`status` 的认知轴 `knowledge_status` 需 A1 语义判断，不计入纯机械） |
 | **A1 提议 + 人工确认** | 27 | 领域归属、tag 归一化、簇迁移、source registry 抽取、schema 扩展 | 需要语义判断 |
 | **A0 禁止自动** | 19 | `RESEARCH_MAP` 拆分、观点删除、`superseded` 标记、LFS 移动、README/AGENTS 重写、领域新增 | 涉及用户知识判断或不可逆操作 |
 
@@ -382,3 +387,4 @@ V1 的单一 `status` 同时承载「文档生命周期」与「知识认识论�
 
 - 2026-08-07：建立 V1 → V2 映射表（Phase 1b）。覆盖顶层文件 13 项、目录层 8 项、知识簇 12 个、特殊对象 4 类、元数据字段 23 个、取值映射 3 组（type 12 / status 7 / tags 6）、隐含设计 10 项、`RESEARCH_MAP` 逐节 11 项、链接问题 6 类、技术债务 13 项，并为每项给出迁移策略、风险与自动化等级。**本轮为设计文档，未执行任何迁移。**
 - 2026-08-07（rev1）：**同步 V2 架构提案的协议缺陷修正**。§5.1 将 `status` 映射目标改为 `document_state` + `knowledge_status` 双正交字段；§5.4 重写为双轴取值映射（`stable`/`archived` 不再废弃，归入 `document_state`）；§9 D9 同步；§1 CHANGELOG 行将 nightly 报告位置改为 `reports/nightly/`（非 Derived）。**未执行任何迁移。**
+- 2026-08-07（rev2）：**同步 V2 架构提案的协议边界收尾（R2 系列）**。§5.4 改为**保守迁移**：`seed→draft×unverified`、`active→active×默认 unverified`（不自动=`current`）、`stable`/`archived` 的 `knowledge_status` 默认 `unverified`；明确 `knowledge_status` 赋值需语义判断、降为 A1（非纯机械 A2）；§6 I2 健康指标改为确定性的 `verification_due_at=last_verified+SLA`（不依赖隐式系统时间）；§11 同步说明 `status` 认知轴非纯机械。**未执行任何迁移。**
