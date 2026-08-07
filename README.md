@@ -50,8 +50,9 @@
   现有大量已沉淀的论文笔记、专题、实验与学习文档仍在 `docs/` 下，采用旧的 `01_foundations / 02_topics / 03_papers / 04_experiments / 05_ideas / 06_reports` 文档类型目录结构。**这只是 V1 遗留结构，不是 V2 目标结构。** 这些材料按「使用时迁移」原则，在未来被真实引用或用户要求时才迁入新的 V2 结构。
 - **`RESEARCH_MAP.md` —— 当前研究版图快照（V1 legacy 全局地图）**
   仍是有价值的当前研究主线、专题关系与开放问题快照；V2 的细粒度认知地图（`_map.md`）是**内容驱动**而非目录模板：只有当某个 Topic 已形成值得长期表达的独立认知结构时才创建，**并非每个领域都必然创建**。
-- **V2 新知识结构（尚未生成）**
-  新的知识将采用 **Domain → Area → Topic → 必要时 Subtopic** 的领域 / 问题优先结构（详见 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md)）。真正的 `kb/` Topic 目录留到下一轮选取实际 pilot 内容时按内容自然生成，**本轮刻意不创建空骨架**。
+- **`kb/` —— V2 新知识结构（领域 / 问题优先）**
+  新的知识采用 **Domain → Area → Topic → 必要时 Subtopic** 的领域 / 问题优先结构（详见 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md)）。首个真实 V2 知识目录已落地：
+  - [`kb/machine-learning/reinforcement-learning/`](./kb/machine-learning/reinforcement-learning/学习规划与进度.md) —— 强化学习基础（学习规划 + 长期学习笔记双文档 Living Document），由 V1 `docs/01_foundations/reinforcement_learning/` 真实迁移而来；其余 Domain / Area / Topic 仅在真实内容出现时按内容自然生成，**不预建空骨架**。
 
 ### 投放与来源
 
