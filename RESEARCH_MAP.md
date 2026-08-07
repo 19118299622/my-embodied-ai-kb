@@ -51,6 +51,10 @@ flowchart LR
 
 当前优先级：**最高**
 
+当前专题：
+
+- [实机机器人数据质量评估总览](./docs/02_topics/embodied_data_quality/实机机器人数据质量评估总览.md)
+
 计划专题：
 
 - 实机数据质量评估总览；
@@ -93,6 +97,15 @@ flowchart LR
 4. 候选动作排序；
 5. 强化学习中的稠密反馈。
 
+代表工作（已迁移）：
+
+- [世界模型与跨具身 VLA（种子）](./docs/02_topics/world_model/世界模型与跨具身_VLA_种子.md)：串接 LingBot-World/VA、DreamVLA、TriVLA、Foresight、X-VLA、Qwen-VLA、VLA_Aerial；结论强度已标注。
+- [LingBot-World 深度分析](./docs/03_papers/lingbot/analysis_LingBot_World.md)：推进开源世界模型（项目站，无 arXiv）。
+- [LingBot-VA 深度分析](./docs/03_papers/lingbot/analysis_LingBot_VA.md)：因果世界建模用于机器人控制（arXiv 待核验）。
+- [DreamVLA 索引](./docs/03_papers/dreamvla/INDEX.md)：综合世界知识预测（动态/空间/语义）+ 逆动力学闭环（2507.04447v3）。
+- [TriVLA 索引](./docs/03_papers/trivla/INDEX.md)：三系统架构 + 情景（episodic）世界模型（2507.01424v3）。
+- [Foresight 笔记（A-D6）](./docs/03_papers/d6_failure_detection/D6-Foresight-Failure-Detection-for-Long-Horizon-阅读笔记.md)：动作条件世界模型潜变量做长时程失败监测（2606.23085v1）。
+
 ### 2.4 强化学习与 VLA 后训练
 
 核心问题：
@@ -114,6 +127,14 @@ flowchart LR
 - 风险触发的测试时强化学习；
 - 实机强化学习的合法数据增强。
 
+代表工作（已迁移）：
+
+- [RIPT-VLA 阅读笔记](./docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)：提出 VLA 训练「第三阶段」——强化学习交互式后训练；DS-LOOP（RLOO 留一法优势 + PPO 裁剪 + 动态采样），稀疏二元奖励 $\{0,1\}$，仅需初始状态 + 任务目标（无需动作标注）；核心洞察「RL 是 SFT 的补集」。配套 3 篇深入拆解（GRPO vs RLOO、PPO ε 调优、Rollout 存储与 On/Off-Policy）同目录。
+- [VLA 后训练中的奖励与信用分配](./docs/02_topics/vla_post_training/VLA后训练中的奖励与信用分配.md)：横向比较 RIPT-VLA / VLA-RL / ConRFT / SimpleVLA-RL / GRPO-RLOO / 泛化实证六条路线，区分结论证据强度。
+- [动作块与流匹配动作生成](./docs/02_topics/action_chunk_flow_matching/动作块与流匹配动作生成.md)：ACT(VAE)→Diffusion Policy→π0(Flow) 动作生成范式演进；动作块理论保证（Zhang et al. 2025）；连接 VLA 后训练与实机部署成本。
+- [AR-VLA 阅读笔记](./docs/03_papers/ar_vla/AR-VLA_阅读笔记.md)：真自回归动作专家，KV cache 跨时间因果生成动作，替代伪自回归 chunk 头；RSS 2026。
+- [X-VLA 阅读笔记](./docs/03_papers/x_vla/X-VLA_阅读笔记.md)：Soft Prompt 跨具身 VLA，Flow Matching 动作生成，0.04% 参数吸收异构性；亦属跨具身研究线（§2.6）。
+
 ### 2.5 执行验证与可靠性
 
 核心问题：
@@ -134,6 +155,13 @@ flowchart LR
 - 合成数据的视觉合理性是否等于可学习性？
 - 如何验证合成轨迹的运动学、动力学和下游价值？
 - 如何管理事实分支、干预分支和反事实分支？
+
+代表工作（已迁移）：
+
+- [X-VLA 阅读笔记](./docs/03_papers/x_vla/X-VLA_阅读笔记.md)：Soft Prompt 跨具身 VLA，0.04% 参数吸收异构性（亦列于 §2.4）。
+- [Qwen-VLA 深度分析](./docs/03_papers/lingbot/analysis_Qwen_VLA.md)：跨任务 / 环境 / 实体统一 VLA 建模（2605.30280v1）。
+- [LingBot-VLA 深度分析](./docs/03_papers/lingbot/analysis_LingBot_VLA.md)：务实 VLA 基础模型，9 种双臂具身（2601.18692v2）。
+- [VLA_Aerial 索引](./docs/03_papers/vla_aerial/INDEX.md)：飞行具身 VLA（VLA-AN / π0-Aerial；arXiv 待核验）。
 
 ### 2.7 实时系统与部署
 
@@ -218,12 +246,22 @@ $$
 
 ## 5. 近期建议产出
 
-1. `docs/02_topics/实机机器人数据质量评估总览.md`
-2. `docs/03_papers/Data_Quality_in_Imitation_Learning_阅读笔记.md`
-3. `docs/03_papers/Data_Assessment_for_Embodied_Intelligence_阅读笔记.md`
-4. `docs/03_papers/Robot_Data_Curation_with_Mutual_Information_Estimators_阅读笔记.md`
-5. `docs/02_topics/VLA后训练中的奖励与信用分配.md`
+1. `docs/02_topics/实机机器人数据质量评估总览.md`（已产出）
+2. `docs/03_papers/Data_Quality_in_Imitation_Learning_阅读笔记.md`（已产出）
+3. `docs/03_papers/Data_Assessment_for_Embodied_Intelligence_阅读笔记.md`（已产出）
+4. `docs/03_papers/Robot_Data_Curation_with_Mutual_Information_Estimators_阅读笔记.md`（已产出）
+5. `docs/02_topics/VLA后训练中的奖励与信用分配.md`（已产出，2026-07-31）
 6. `docs/05_ideas/VLA动作块的停滞与阶段混淆问题.md`
+7. `docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md`（已产出，2026-07-31；含 3 篇配套拆解）
+8. `docs/02_topics/action_chunk_flow_matching/动作块与流匹配动作生成.md`（已产出，2026-08-03）
+9. `docs/03_papers/ar_vla/AR-VLA_阅读笔记.md`（已产出，2026-08-03）
+10. `docs/03_papers/x_vla/X-VLA_阅读笔记.md`（已产出，2026-08-03；跨具身）
+11. `docs/03_papers/d6_failure_detection/INDEX.md`（已产出，2026-08-03；A-D6 失败检测 9 篇，PDF 仅索引）
+12. `docs/02_topics/embodied_data_quality/实机机器人数据质量评估总览.md`（已补 A-D6 专节，2026-08-03）
+13. `docs/03_papers/lingbot/INDEX.md`（已产出，2026-08-03；LingBot 系列 6 篇 + 汇总）
+14. `docs/03_papers/{openvla,pi0,rt1,smolvla,trivla,ud_vla,vla_adapter,openvla_oft,pi05}/INDEX.md`（已产出，2026-08-03；9 个纯 PDF 模型索引，PDF 不进 git）
+15. `docs/03_papers/{dreamvla,vla_aerial}/INDEX.md`（已产出，2026-08-03；世界模型 / 跨具身飞行平台索引）
+16. `docs/02_topics/world_model/世界模型与跨具身_VLA_种子.md`（已产出，2026-08-03；世界模型 + 跨具身种子专题）
 
 ## 6. 维护规则
 

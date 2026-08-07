@@ -46,3 +46,6 @@ outputs/
 *.tar
 *.tar.gz
 *.7z
+
+# Project agent memory (private, not part of the published knowledge base)
+.workbuddy/

@@ -1,4 +1,4 @@
-# Embodied-AI-Lab
+# my-embodied-ai-kb
 
 > 中文定位：**具身智能研究实验室**
 >
@@ -33,7 +33,7 @@
 ## 目录结构
 
 ```text
-Embodied-AI-Lab/
+my-embodied-ai-kb/
 ├── README.md
 ├── AGENTS.md
 ├── RESEARCH_MAP.md
@@ -182,6 +182,28 @@ CheckVLA_阅读笔记.md
 Robot_Data_Curation_with_Mutual_Information_Estimators_阅读笔记.md
 ```
 
+### 目录放置约定
+
+- **`01_foundations`**：保持「双文档学习模式」——每个主题一个子目录，内含 `学习规划与进度.md` + `长期学习笔记.md`。
+- **`02_topics`**：每个专题一个子目录（英文 slug）；主文档为长期维护的总览时用**稳定名、无日期**（如 `实机机器人数据质量评估总览.md`），若为阶段性快照/观察则用 `YYYY-MM-DD_` 前缀；专题配图放 `assets/<topic-slug>/`。
+- **`03_papers`**：每篇论文一个子目录（英文 slug），内含 `<slug>_阅读笔记.md` + 同名 PDF（经 Git LFS 管理）+ 必要配图。
+- **`04_experiments` / `05_ideas` / `06_reports`**：单文件即可，按上述日期/稳定名规则命名。
+
+### 文档状态初始值
+
+- 已带完整内容且经核验 → `active`；
+- 仅骨架、待复验或迁移中 → `seed`。
+
+### 标签受控词表
+
+`tags` 从以下白名单选取，新增需先确认：
+
+```text
+embodied-ai, vla, world-model, reinforcement-learning, imitation-learning,
+data-quality, robot-data, runtime-verification, foundation, survey,
+experiment, research-idea, learning-plan, learning-notes
+```
+
 ## 公式和图表
 
 行内公式：
@@ -218,10 +240,10 @@ $$
 将文件夹放到本地目标位置后：
 
 ```bash
-cd Embodied-AI-Lab
+cd my-embodied-ai-kb
 git init
 git add .
-git commit -m "chore: initialize Embodied-AI-Lab"
+git commit -m "chore: initialize my-embodied-ai-kb"
 git branch -M main
 ```
 
