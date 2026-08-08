@@ -9,12 +9,13 @@
 
 ## 当前阶段
 
-- **V2 Canonical Knowledge Migration Phase 1 正在进行**：本阶段先迁移具身智能 → Robot Data → Data Quality 主干；本 PR 已开始迁移其核心专题文档。
+- **V2 Canonical Knowledge Migration Phase 1 正在进行**：当前先迁移具身智能 → Robot Data → Data Quality 主干；Data Quality 第一批核心专题文档已完成 V1 → V2 canonical 迁移，后续主干按用户确认分批处理。
 - **V2 MVP Repository Surface Cleanup 已完成**：人类阅读面与 Agent 内部控制面已分离。
-- 已验证两条 MVP 能力链：
+- 已验证三条 MVP 能力链：
   - Living Document：V1 → V2 真实迁移；
   - Paper：Source → Registry → `paper-summary`。
-- 尚未进入正式 Nightly Curator 试运行；下一阶段由用户确认。
+  - Nightly Curator Pilot 1：Mixed Markdown Routing（手动触发，完成 Living Document / existing-topic Knowledge / ambiguous hold）。
+- 尚未进入自动定时 Nightly Curator 或长期连续运行阶段；下一阶段由用户确认。
 
 ## 当前活跃主题
 
