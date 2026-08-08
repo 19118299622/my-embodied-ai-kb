@@ -4,7 +4,7 @@ title: "TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics"
 kind: paper-summary
 domain: machine-learning
 created: 2026-08-07
-updated: 2026-08-07
+updated: 2026-08-08
 sources:
   - arxiv-2602.19313
 ---
@@ -39,15 +39,17 @@ TOPReward 的流程分为三步： [PAPER]
 ## 实验设定
 
 - **ManiRewardBench**（作者提出的真实操作基准）：论文 v2 描述其总体覆盖 **130 个唯一任务**；其中官方项目页的 progress-estimation 定量评测子集报告 **113 个任务 / 497 条 episode**，另有 **23 个任务**的失败子集（failure split）专门用于成功检测（success detection）评估。基准跨越四个机器人平台（Franka Emika、单臂 / 双手 YAM、SO-100/101），带任务进度的时序标注； [PAPER]
-- **Open X-Embodiment** 数据集（项目页报告为 39 个数据集、780 条 episode）； [PAPER]
+- **Open X-Embodiment** 数据集（v2 Table 1 采用统一过滤后的 **33 个 OXE datasets，每个 20 episodes**）； [PAPER]
 - 对比基线 / 后端 VLM：GVL，以及 Molmo-2-8B、Qwen3-VL-8B、Gemini-2.5-Pro 等。 [PAPER]
 
 ## 主要结果（作者报告）
 
-- **进度估计（Mean VOC，越高越好）**：在开源 VLM 上显著优于先前免训练方法——Open X-Embodiment 上 Qwen3-VL 达 0.857（GVL 仅 0.194；而在 Molmo-2 后端上 GVL 为 -0.016，TOPReward（Molmo-2）为 0.417）；ManiRewardBench 上 Qwen3-VL 达 0.947，优于 GVL；与训练过的奖励模型基线在进度估计指标上具竞争力，且**无需奖励模型训练**。 [PAPER]
-- **成功检测（ROC-AUC）**：在 ManiRewardBench 失败子集上，TOPReward（Qwen3-VL）0.654、Gemini 版 0.826，优于 GVL（约 0.519 / 0.823）；在开源模型上超过 GVL，在 Gemini 上与之相当。 [PAPER]
-- **真实部署（单臂 SO-100）**：用每任务仅 50 条带噪演示，结合 TOPReward 做优势加权回归（TOP-AWR），在 6 个任务上成功率持续高于标准行为克隆（Behavior Cloning，BC）——三列数字按 **Pretrained → BC → TOP-AWR** 排序：Place doll in box 0 → 7 → 10、Pick up cube 4 → 7 → 10、Put cube in cup 4 → 6 → 9；在部分 challenging tasks 上 TOP-AWR 达到 10/10，而对应 BC 为 7/10。 [PAPER]
+- **进度估计（Mean VOC，越高越好）— Open X-Embodiment（v2 Table 1，33 个 OXE datasets × 20 episodes）**：在开源 VLM 上显著优于先前免训练方法——GVL/Molmo-2 为 -0.019、GVL/Qwen3-VL-8B 为 0.218，而 TOPReward/Molmo-2 达 0.525、TOPReward/Qwen3-VL-8B 达 0.874； [PAPER]
+- **进度估计（Mean VOC）— ManiRewardBench progress-evaluation（v2 Table 2，113 tasks / 497 episodes）**：TOPReward/Qwen3-VL-8B 达 0.942、GVL/Qwen3-VL-8B 仅 0.316（补充：TOPReward/Molmo-2 0.619、GVL/Molmo-2 -0.003）；与训练过的奖励模型基线在进度估计指标上具竞争力，且**无需奖励模型训练**。 [PAPER]
+- **成功检测（ROC-AUC，v2 §4.3 / Table 3，cleaned LeRobot split 共 279 episodes：150 successful、129 failed）**：TOPReward/Qwen3-VL-8B 0.939、TOPReward/Qwen3-VL-32B 0.965、GVL/Qwen3-VL-8B 0.728、Robometer-4B 0.930；TOPReward 在开源 VLM 上超过 GVL。 [PAPER]
+- **真实部署（单臂 SO-100，v2 命名为 reward-weighted behavior cloning / TOP-RWBC）**：用每任务仅 50 条带噪演示，结合 TOPReward 做奖励加权行为克隆（TOP-RWBC），其 Table 4 报告的是 **predefined subtasks 的 partial-success score over 10 trials**（非普通"成功率"）——三列数字按 **Pretrained → BC → TOP-RWBC** 排序：Place doll in box 0 → 7 → 10、Pick up cube 4 → 7 → 10、Put cube in cup 4 → 6 → 9；在部分 challenging tasks 上 TOP-RWBC 达到 10/10，而对应 BC 为 7/10。 [PAPER]
 - **附加分析**：奖励对所给指令敏感，且不能仅由时间索引解释。 [PAPER]
+- *来源说明*：官方项目页当前仍展示较早的 TOP-AWR 命名与旧实验口径（如 39 datasets / 780 episodes、旧 success-detection 的 Gemini 表结果），本文一律以 arXiv v2 正文为当前主事实源，不将旧数字与 v2 主结果混用。
 
 ## 论文明确给出的局限 / 适用条件
 
