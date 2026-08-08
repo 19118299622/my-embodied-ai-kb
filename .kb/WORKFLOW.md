@@ -1,7 +1,7 @@
 # WORKFLOW.md — Nightly Knowledge Curation 工作流
 
 > 本文件定义 **Agent 每次 inbox curation 的可执行步骤**。它是“工作流说明”，不是调度脚本——Nightly 由**外部定时任务**触发，仓库不内置调度器或状态机（见 [`DECISIONS.md`](./DECISIONS.md) D-008）。
-> 所有动作受 [`AGENTS.md`](./AGENTS.md) 权限红线与 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) 约束；写作细节以 [`WRITING_RULES.md`](./WRITING_RULES.md) 为准。
+> 所有动作受 [`AGENTS.md`](../AGENTS.md) 权限红线与 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) 约束；写作细节以 [`WRITING_RULES.md`](./WRITING_RULES.md) 为准。
 > Agent 在 **nightly 分支**提交，并**绝不自动 merge main**（[`DECISIONS.md`](./DECISIONS.md) D-007）。
 
 ---
@@ -10,7 +10,7 @@
 
 按以下顺序加载协议栈，再处理 `inbox/`：
 
-1. [`AGENTS.md`](./AGENTS.md) — 行为边界、权限红线、Git 安全约束；
+1. [`AGENTS.md`](../AGENTS.md) — 行为边界、权限红线、Git 安全约束；
 2. [`STATE.md`](./STATE.md) — 当前阶段、活跃主题、迁移重点；
 3. [`DECISIONS.md`](./DECISIONS.md) — 已确认长期选择；
 4. [`WORKFLOW.md`](./WORKFLOW.md) — 本文件（本次动作步骤）；
@@ -19,7 +19,7 @@
 
 ## 2. 规则冲突优先级
 
-> **用户本次明确指令 > [`AGENTS.md`](./AGENTS.md) > [`DECISIONS.md`](./DECISIONS.md) > 本文件（WORKFLOW.md） > [`WRITING_RULES.md`](./WRITING_RULES.md) > [`STATE.md`](./STATE.md) 的运行时上下文**
+> **用户本次明确指令 > [`AGENTS.md`](../AGENTS.md) > [`DECISIONS.md`](./DECISIONS.md) > 本文件（WORKFLOW.md） > [`WRITING_RULES.md`](./WRITING_RULES.md) > [`STATE.md`](./STATE.md) 的运行时上下文**
 
 [`STATE.md`](./STATE.md) 仅提供上下文，不得覆盖更高层安全规则。
 

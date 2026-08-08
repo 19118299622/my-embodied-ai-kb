@@ -13,7 +13,7 @@ tags:
 
 > 这是当前认知的结构化快照，不是对具身智能领域的完整覆盖。
 >
-> 过去已经学习但尚未迁入的内容记录在 [`MIGRATION_BACKLOG.md`](./MIGRATION_BACKLOG.md)。
+> 过去已经学习但尚未迁入的内容记录在 [`MIGRATION_BACKLOG.md`](../.kb/history/MIGRATION_BACKLOG.md)。
 
 ## 1. 总体闭环
 
@@ -53,7 +53,7 @@ flowchart LR
 
 当前专题：
 
-- [实机机器人数据质量评估总览](./docs/02_topics/embodied_data_quality/实机机器人数据质量评估总览.md)
+- [实机机器人数据质量评估总览](./02_topics/embodied_data_quality/实机机器人数据质量评估总览.md)
 
 计划专题：
 
@@ -76,7 +76,7 @@ flowchart LR
 
 当前专题：
 
-- [VLA 实时控制、执行验证与在线学习](./docs/02_topics/vla_runtime_verification_online_learning/2026-07-31_VLA实时控制执行验证与在线学习.md)
+- [VLA 实时控制、执行验证与在线学习](./02_topics/vla_runtime_verification_online_learning/2026-07-31_VLA实时控制执行验证与在线学习.md)
 
 ### 2.3 世界模型
 
@@ -99,12 +99,12 @@ flowchart LR
 
 代表工作（已迁移）：
 
-- [世界模型与跨具身 VLA（种子）](./docs/02_topics/world_model/世界模型与跨具身_VLA_种子.md)：串接 LingBot-World/VA、DreamVLA、TriVLA、Foresight、X-VLA、Qwen-VLA、VLA_Aerial；结论强度已标注。
-- [LingBot-World 深度分析](./docs/03_papers/lingbot/analysis_LingBot_World.md)：推进开源世界模型（项目站，无 arXiv）。
-- [LingBot-VA 深度分析](./docs/03_papers/lingbot/analysis_LingBot_VA.md)：因果世界建模用于机器人控制（arXiv 待核验）。
-- [DreamVLA 索引](./docs/03_papers/dreamvla/INDEX.md)：综合世界知识预测（动态/空间/语义）+ 逆动力学闭环（2507.04447v3）。
-- [TriVLA 索引](./docs/03_papers/trivla/INDEX.md)：三系统架构 + 情景（episodic）世界模型（2507.01424v3）。
-- [Foresight 笔记（A-D6）](./docs/03_papers/d6_failure_detection/D6-Foresight-Failure-Detection-for-Long-Horizon-阅读笔记.md)：动作条件世界模型潜变量做长时程失败监测（2606.23085v1）。
+- [世界模型与跨具身 VLA（种子）](./02_topics/world_model/世界模型与跨具身_VLA_种子.md)：串接 LingBot-World/VA、DreamVLA、TriVLA、Foresight、X-VLA、Qwen-VLA、VLA_Aerial；结论强度已标注。
+- [LingBot-World 深度分析](./03_papers/lingbot/analysis_LingBot_World.md)：推进开源世界模型（项目站，无 arXiv）。
+- [LingBot-VA 深度分析](./03_papers/lingbot/analysis_LingBot_VA.md)：因果世界建模用于机器人控制（arXiv 待核验）。
+- [DreamVLA 索引](./03_papers/dreamvla/INDEX.md)：综合世界知识预测（动态/空间/语义）+ 逆动力学闭环（2507.04447v3）。
+- [TriVLA 索引](./03_papers/trivla/INDEX.md)：三系统架构 + 情景（episodic）世界模型（2507.01424v3）。
+- [Foresight 笔记（A-D6）](./03_papers/d6_failure_detection/D6-Foresight-Failure-Detection-for-Long-Horizon-阅读笔记.md)：动作条件世界模型潜变量做长时程失败监测（2606.23085v1）。
 
 ### 2.4 强化学习与 VLA 后训练
 
@@ -129,11 +129,11 @@ flowchart LR
 
 代表工作（已迁移）：
 
-- [RIPT-VLA 阅读笔记](./docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)：提出 VLA 训练「第三阶段」——强化学习交互式后训练；DS-LOOP（RLOO 留一法优势 + PPO 裁剪 + 动态采样），稀疏二元奖励 $\{0,1\}$，仅需初始状态 + 任务目标（无需动作标注）；核心洞察「RL 是 SFT 的补集」。配套 3 篇深入拆解（GRPO vs RLOO、PPO ε 调优、Rollout 存储与 On/Off-Policy）同目录。
-- [VLA 后训练中的奖励与信用分配](./docs/02_topics/vla_post_training/VLA后训练中的奖励与信用分配.md)：横向比较 RIPT-VLA / VLA-RL / ConRFT / SimpleVLA-RL / GRPO-RLOO / 泛化实证六条路线，区分结论证据强度。
-- [动作块与流匹配动作生成](./docs/02_topics/action_chunk_flow_matching/动作块与流匹配动作生成.md)：ACT(VAE)→Diffusion Policy→π0(Flow) 动作生成范式演进；动作块理论保证（Zhang et al. 2025）；连接 VLA 后训练与实机部署成本。
-- [AR-VLA 阅读笔记](./docs/03_papers/ar_vla/AR-VLA_阅读笔记.md)：真自回归动作专家，KV cache 跨时间因果生成动作，替代伪自回归 chunk 头；RSS 2026。
-- [X-VLA 阅读笔记](./docs/03_papers/x_vla/X-VLA_阅读笔记.md)：Soft Prompt 跨具身 VLA，Flow Matching 动作生成，0.04% 参数吸收异构性；亦属跨具身研究线（§2.6）。
+- [RIPT-VLA 阅读笔记](./03_papers/ript_vla/RIPT-VLA_阅读笔记.md)：提出 VLA 训练「第三阶段」——强化学习交互式后训练；DS-LOOP（RLOO 留一法优势 + PPO 裁剪 + 动态采样），稀疏二元奖励 $\{0,1\}$，仅需初始状态 + 任务目标（无需动作标注）；核心洞察「RL 是 SFT 的补集」。配套 3 篇深入拆解（GRPO vs RLOO、PPO ε 调优、Rollout 存储与 On/Off-Policy）同目录。
+- [VLA 后训练中的奖励与信用分配](./02_topics/vla_post_training/VLA后训练中的奖励与信用分配.md)：横向比较 RIPT-VLA / VLA-RL / ConRFT / SimpleVLA-RL / GRPO-RLOO / 泛化实证六条路线，区分结论证据强度。
+- [动作块与流匹配动作生成](./02_topics/action_chunk_flow_matching/动作块与流匹配动作生成.md)：ACT(VAE)→Diffusion Policy→π0(Flow) 动作生成范式演进；动作块理论保证（Zhang et al. 2025）；连接 VLA 后训练与实机部署成本。
+- [AR-VLA 阅读笔记](./03_papers/ar_vla/AR-VLA_阅读笔记.md)：真自回归动作专家，KV cache 跨时间因果生成动作，替代伪自回归 chunk 头；RSS 2026。
+- [X-VLA 阅读笔记](./03_papers/x_vla/X-VLA_阅读笔记.md)：Soft Prompt 跨具身 VLA，Flow Matching 动作生成，0.04% 参数吸收异构性；亦属跨具身研究线（§2.6）。
 
 ### 2.5 执行验证与可靠性
 
@@ -158,10 +158,10 @@ flowchart LR
 
 代表工作（已迁移）：
 
-- [X-VLA 阅读笔记](./docs/03_papers/x_vla/X-VLA_阅读笔记.md)：Soft Prompt 跨具身 VLA，0.04% 参数吸收异构性（亦列于 §2.4）。
-- [Qwen-VLA 深度分析](./docs/03_papers/lingbot/analysis_Qwen_VLA.md)：跨任务 / 环境 / 实体统一 VLA 建模（2605.30280v1）。
-- [LingBot-VLA 深度分析](./docs/03_papers/lingbot/analysis_LingBot_VLA.md)：务实 VLA 基础模型，9 种双臂具身（2601.18692v2）。
-- [VLA_Aerial 索引](./docs/03_papers/vla_aerial/INDEX.md)：飞行具身 VLA（VLA-AN / π0-Aerial；arXiv 待核验）。
+- [X-VLA 阅读笔记](./03_papers/x_vla/X-VLA_阅读笔记.md)：Soft Prompt 跨具身 VLA，0.04% 参数吸收异构性（亦列于 §2.4）。
+- [Qwen-VLA 深度分析](./03_papers/lingbot/analysis_Qwen_VLA.md)：跨任务 / 环境 / 实体统一 VLA 建模（2605.30280v1）。
+- [LingBot-VLA 深度分析](./03_papers/lingbot/analysis_LingBot_VLA.md)：务实 VLA 基础模型，9 种双臂具身（2601.18692v2）。
+- [VLA_Aerial 索引](./03_papers/vla_aerial/INDEX.md)：飞行具身 VLA（VLA-AN / π0-Aerial；arXiv 待核验）。
 
 ### 2.7 实时系统与部署
 
@@ -272,4 +272,4 @@ $$
 3. 添加相对链接；
 4. 标记当前证据强度；
 5. 不将单篇论文的主张直接升级为领域共识；
-6. 重要结构变化记录到 `CHANGELOG.md`。
+6. 精确变更历史由 Git 保存；涉及用户认知结构的重要变化按 V2 `_map.md` / 认知演化规则处理。
