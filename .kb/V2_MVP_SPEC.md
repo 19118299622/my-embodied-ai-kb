@@ -229,10 +229,10 @@ Relation MVP **只使用 Markdown 的「相关知识 / 相关主题」段落及�
 | 文件 | 职责 |
 |---|---|
 | `README.md` | **人类 HOME**：项目入口、当前重点、目录导航 |
-| `AGENTS.md` | **Agent 持久行为边界**：仅负责持久的行为边界、权限红线与 Git 安全约束；**不含写作规范**（写作规范归 `WRITING_RULES.md`）。该边界持久 / 稳定，但**经用户确认可演化** |
+| `AGENTS.md` | **Agent 持久行为边界**：仅负责持久的行为边界、权限红线与 Git 安全约束；**不含写作规范**（写作规范归 `.kb/WRITING_RULES.md`）。该边界持久 / 稳定，但**经用户确认可演化** |
 | `.kb/DECISIONS.md` | **已确认长期选择**：记录经过确认的方向性/架构性决策（持久 / 稳定，经用户确认可演化） |
 | `.kb/WORKFLOW.md` | **每次 inbox curation 动作**：定义白天投放 → 夜间策展的具体步骤 |
-| `.kb/WRITING_RULES.md` | **正式文档输出规范入口**：写作规则的唯一权威真源。当前 `README.md` / `AGENTS.md` 中的写作约定**仅作为未来建立本文件时的迁移来源**，不得继续作为并列规范真源 |
+| `.kb/WRITING_RULES.md` | **正式文档输出规范入口**：写作规则的唯一权威真源。当前 `README.md` / `AGENTS.md` 中的写作约定不作为并列规范真源 |
 | `.kb/STATE.md` | **仅保存轻量当前状态**：当前阶段、活跃主题、持续维护文档、当前迁移重点 |
 
 `.kb/STATE.md` 只承载**易变、轻量**的当前状态，不存放长期规则或知识正文。
@@ -241,7 +241,7 @@ Relation MVP **只使用 Markdown 的「相关知识 / 相关主题」段落及�
 
 ## 13. Markdown 写作规则继承
 
-Markdown 写作规则的**正式权威真源为 `WRITING_RULES.md`**（协议栈见 §12）。当前 `README.md` / `AGENTS.md` 中已有的写作约定**只作为未来建立 `WRITING_RULES.md` 时的迁移来源**，**不能继续作为与 `WRITING_RULES.md` 并列的规范真源**；在 `WRITING_RULES.md` 建立前，这些既有约定作为临时参考沿用，但任何新建的 `WRITING_RULES.md` 条款优先。继承的约定包括：
+Markdown 写作规则的**正式权威真源为 `.kb/WRITING_RULES.md`**（协议栈见 §12）。`.kb/WRITING_RULES.md` **现在已经是正式文档写作规则的唯一权威真源**；`README.md` / `AGENTS.md` 中的相关约定不再作为并列规范真源。继承的约定包括：
 
 - **公式**：行内 `$...$`、块 `$$...$$`（兼容标准 Markdown 的 LaTeX）；
 - **术语**：首次出现使用「中文名称（英文全称，必要时缩写）」，后文方用缩写；

@@ -6,7 +6,11 @@
 
 ## 从这里进入知识
 
-当前已经落地的 V2 知识入口是：
+当前主要知识入口：
+
+### Embodied AI（V1 legacy，渐进迁移中）
+
+- [具身智能研究地图](./docs/RESEARCH_MAP.md)
 
 ### Machine Learning → Reinforcement Learning
 
@@ -20,7 +24,7 @@
 
 - `inbox/`：投放新的 PDF 或 Markdown 材料。
 - `sources/`：保存原始来源及其 registry。
-- `docs/`：仍在渐进迁移中的 V1 legacy 知识；其中 [`RESEARCH_MAP.md`](./docs/RESEARCH_MAP.md) 是当前研究主线快照。
+- `docs/`：仍在渐进迁移中的 V1 legacy 知识。
 
 `.kb/` 是知识库自身的内部控制面，保存协议、当前状态、已确认决策和历史审计材料；普通知识阅读通常无需进入。
 

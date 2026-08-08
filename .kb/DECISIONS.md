@@ -50,7 +50,7 @@
 
 ## D-008 · Agent-first，Automation-later
 
-- **decision**：知识策展由 Agent 按仓库协议执行；Nightly 由**外部定时任务**触发，仓库只提供 workflow（[`WORKFLOW.md`](./WORKFLOW.md)），不内置复杂调度 / 状态机；最终触发 Prompt 可缩短为「按 `AGENTS.md` / `WORKFLOW.md` 执行 nightly knowledge curation」。
+- **decision**：知识策展由 Agent 按仓库协议执行；Nightly 由**外部定时任务**触发，仓库只提供 workflow（[`.kb/WORKFLOW.md`](./WORKFLOW.md)），不内置复杂调度 / 状态机；最终触发 Prompt 可缩短为「按 `AGENTS.md` / `.kb/WORKFLOW.md` 执行 nightly knowledge curation」。
 - **rationale**：先把协议与人类协作跑通，自动化调度后置。
 - **status**：confirmed
 
@@ -74,6 +74,6 @@
 
 ## D-012 · inbox-first intake（用户投放，Agent 策展）
 
-- **decision**：用户白天把 `.pdf` / `.md` 放入 `inbox/`，Agent 按 [`WORKFLOW.md`](./WORKFLOW.md) 夜间策展；无法可靠判断的材料原样留在 `inbox/`。
+- **decision**：用户白天把 `.pdf` / `.md` 放入 `inbox/`，Agent 按 [`.kb/WORKFLOW.md`](./WORKFLOW.md) 夜间策展；无法可靠判断的材料原样留在 `inbox/`。
 - **rationale**：明确人机分工，降低误操作与无声丢失。
 - **status**：confirmed

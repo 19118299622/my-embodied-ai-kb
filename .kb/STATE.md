@@ -9,12 +9,11 @@
 
 ## 当前阶段
 
-- **V2 MVP Repository Surface Cleanup 已完成**
-- 本 Pilot 验证了完整的「用户投放 PDF 到 `inbox/` → Agent 按协议策展」日常链路：从 PDF 原文 + 可靠公开来源核验论文身份 / 稳定外部身份（arXiv ID、DOI）/ 版本 / 作者并确认其为最新公开版本；将 PDF **真实移动**（非复制）至 `sources/papers/` 并经 Git LFS 管理，文件名以正式标题为语义来源、仅对 Windows 非法字符做最小替换；在 `sources/papers.yaml` **新增且仅新增**一条 Source registry（稳定 source id `arxiv-2602.19313`）；生成一篇受约束 `paper-summary`（Front Matter `sources:` 引用该 source id，标记 `Agent-generated` / `user-unverified`，不写 `read_at`）。
-- 唯一处理论文：**TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics**（arXiv:2602.19313，最新 v2）。本 Pilot 显式授权建立了 `kb/machine-learning/reinforcement-learning/reward-design/` Subtopic 承载该 `paper-summary`；未创建其它 Domain / Area / Topic，未创建 `_map.md`。
-- **`_map.md` 不是目录模板**：只有当某个 Topic 已形成值得长期表达的独立认知结构时，才在该目录创建 `_map.md`；本 Pilot 不创建地图。
-- 尚未进入：其它 `docs/` 知识迁移、完整 Nightly 自动化、任何复杂基础设施、除本次显式授权外的结构扩张。
-- **下一步**：后续阶段由用户另行确认，不在此预定义。
+- **V2 MVP Repository Surface Cleanup 已完成**：人类阅读面与 Agent 内部控制面已分离。
+- 已验证两条 MVP 能力链：
+  - Living Document：V1 → V2 真实迁移；
+  - Paper：Source → Registry → `paper-summary`。
+- 尚未进入正式 Nightly Curator 试运行；下一阶段由用户确认。
 
 ## 当前活跃主题
 
