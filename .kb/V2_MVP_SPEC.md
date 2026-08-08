@@ -3,7 +3,7 @@ title: V2 MVP 需求规格（轻量、Agent-first、Git-native）
 type: spec
 status: active
 created: 2026-08-07
-updated: 2026-08-07
+updated: 2026-08-08
 tags:
   - v2-design
   - mvp
@@ -18,13 +18,13 @@ tags:
 >
 > 早期完整架构探索 [`.kb/history/V2_ARCHITECTURE_PROPOSAL.md`](./history/V2_ARCHITECTURE_PROPOSAL.md)、[`.kb/history/V1_TO_V2_MAPPING.md`](./history/V1_TO_V2_MAPPING.md)、[`.kb/history/MIGRATION_PLAN_V2.md`](./history/MIGRATION_PLAN_V2.md) 属于「未来参考」，若与本文冲突，**一律以本文为准**。
 >
-> 本文只固化**需求与边界**，不规定实现细节；本轮不创建任何实际仓库结构、协议文件或脚本（见 §13、§14）。
+> 本文只固化**需求与边界**，不规定实现细节；当前实现状态不在本文重复记录。
 
 ---
 
 ## 0. 目录
 
-- [1. 背景与本轮范围](#1-背景与本轮范围)
+- [1. 背景与规格边界](#1-背景与规格边界)
 - [2. 核心目标与日常循环](#2-核心目标与日常循环)
 - [3. 知识目录结构（领域/问题优先）](#3-知识目录结构领域问题优先)
 - [4. 旧 V1 迁移策略](#4-旧-v1-迁移策略)
@@ -44,7 +44,7 @@ tags:
 
 ---
 
-## 1. 背景与本轮范围
+## 1. 背景与规格边界
 
 现有 [`.kb/history/V1_INVENTORY.md`](./history/V1_INVENTORY.md)、[`.kb/history/V2_ARCHITECTURE_PROPOSAL.md`](./history/V2_ARCHITECTURE_PROPOSAL.md)、[`.kb/history/V1_TO_V2_MAPPING.md`](./history/V1_TO_V2_MAPPING.md)、[`.kb/history/MIGRATION_PLAN_V2.md`](./history/MIGRATION_PLAN_V2.md) 是一次**完整但明显偏重**的架构探索。经过重新需求对齐，正式目标已收敛为一个 **Agent-first、Git-native、面向长期个人技术知识沉淀的轻量 V2 MVP**：
 
@@ -53,8 +53,6 @@ tags:
 - 现有完整架构**不再作为实施规格**，仅保留为未来参考与决策演化证据。
 
 `V1_INVENTORY.md` 作为**事实审计基线**保持不变，不因新 MVP 修改其事实内容。
-
-本轮范围**仅限**：新增本需求规格 + 对三篇旧设计文档做最小 authority 重定位。**不进入实际仓库改造或实现阶段。**
 
 ---
 
@@ -328,3 +326,4 @@ Markdown 写作规则的**正式权威真源为 `.kb/WRITING_RULES.md`**（协�
 
 - 2026-08-07：初始创建。将重新对齐后的轻量 V2 MVP 需求基线固化；对三篇旧设计文档做最小 authority 重定位（冲突以本文件为准，M0–M7 标记 superseded）。本轮仅做需求收敛，不进入实现。
 - 2026-08-07（协议收尾）：对独立审查指出的 9 处歧义做最小修正——①Source 原始文件只读但允许读取/解析/提取 metadata 并产出 Knowledge/paper-summary；②`_map.md` 收紧为仅自动维护事实型低风险内容、认知演化须用户明确表达/确认、疑似转折仅建议；③AGENTS 只管持久行为边界/权限红线/Git 安全（不含写作规范）、WRITING_RULES 为唯一权威真源、README/AGENTS 既有约定仅作迁移来源、「长期不变」改「持久可演化」；④补入 Nightly 读取顺序与冲突优先级（STATE 仅上下文、不覆盖高层安全规则）；⑤Relation MVP 不强制空章节、不自动推断弱关系；⑥kind 改为轻量受控集合、新增须用户确认入 DECISIONS；⑦papers.yaml 区分 published_at/version_published_at/added_at、可选字段不扩 registry；⑧明确「真实迁移」= 实际移动 canonical 文件、不长期保留 V1 副本；⑨paper-summary 标注不重新引入 knowledge_status。本轮仍只改规格，未进入实现。
+- 2026-08-08：Repository Surface Cleanup 分离人类阅读面与 Agent 控制面，并同步协议路径与 `.kb/WRITING_RULES.md` authority；未改变核心 MVP 需求。

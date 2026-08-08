@@ -42,4 +42,4 @@
 ## 当前迁移重点
 
 - **V1 使用时迁移**：`docs/` 为 V1 legacy 知识，仅在被真实引用或用户明确要求时才迁入新结构；不强制全量迁移。
-- 本轮已真实迁移强化学习基础双文档（`docs/01_foundations/reinforcement_learning/` → `kb/machine-learning/reinforcement-learning/`）；其余 `docs/` 内容仍按「使用时迁移」原则；本轮未注入额外 stable id、未改动其它知识正文。
+- 强化学习基础双文档已完成 V1 → V2 真实迁移；其余 `docs/` 内容继续遵循「使用时迁移」原则。
