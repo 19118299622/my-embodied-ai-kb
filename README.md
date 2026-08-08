@@ -11,6 +11,10 @@
 ### Embodied AI
 
 - [Robot Data → Data Quality（V2 已迁移主干）](./kb/embodied-ai/robot-data/data-quality/实机机器人数据质量评估总览.md)
+- [VLA → Foundations：动作块与流匹配动作生成](./kb/embodied-ai/vla/foundations/动作块与流匹配动作生成.md)
+- [VLA → Post-training：奖励与信用分配](./kb/embodied-ai/vla/post-training/VLA后训练中的奖励与信用分配.md)
+- [VLA → Runtime verification：实时控制与在线学习](./kb/embodied-ai/vla/runtime-verification/2026-07-31_VLA实时控制执行验证与在线学习.md)
+- [World Model：世界模型与跨具身 VLA（种子）](./kb/embodied-ai/world-model/世界模型与跨具身_VLA_种子.md)
 
 ### Embodied AI legacy（渐进迁移中）
 

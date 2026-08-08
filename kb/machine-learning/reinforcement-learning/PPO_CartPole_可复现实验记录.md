@@ -1,14 +1,10 @@
 ---
+id: rl-ppo-cartpole-reproducible-experiment
 title: PPO on CartPole/HalfCheetah 可复现实验记录
-type: experiment
-status: seed
+kind: experiment
+domain: machine-learning
 created: 2026-07-31
-updated: 2026-07-31
-tags:
-  - experiment
-  - ppo
-  - reinforcement-learning
-  - reproducibility
+updated: 2026-08-08
 ---
 
 # PPO on CartPole/HalfCheetah 可复现实验记录
@@ -90,8 +86,8 @@ tags:
 
 ## 关联文档
 
-- 基础笔记：[`../../kb/machine-learning/reinforcement-learning/长期学习笔记.md`](../../kb/machine-learning/reinforcement-learning/长期学习笔记.md)（第 4 讲 PPO 精解，已锚定本实验超参）
-- VLA 后训练脉络：[`../../03_papers/ript_vla/RIPT-VLA_阅读笔记.md`](../../03_papers/ript_vla/RIPT-VLA_阅读笔记.md)
+- 基础笔记：[`./长期学习笔记.md`](./长期学习笔记.md)（第 4 讲 PPO 精解，已锚定本实验超参）
+- VLA 后训练脉络：[`../../../docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md`](../../../docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)
 
 ## 更新记录
 

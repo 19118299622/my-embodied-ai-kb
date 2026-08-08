@@ -1,14 +1,10 @@
 ---
+id: embodied-world-model-cross-embodiment-vla
 title: "世界模型与跨具身 VLA（种子）"
-type: topic
-status: seed
+kind: topic-note
+domain: embodied-ai
 created: 2026-08-03
-updated: 2026-08-03
-tags:
-  - embodied-ai
-  - world-model
-  - vla
-  - cross-embodiment
+updated: 2026-08-08
 ---
 
 # 世界模型与跨具身 VLA（种子）
@@ -36,15 +32,15 @@ tags:
 
 | 工作 | 类型 | 入口 | 一句话 |
 |---|---|---|---|
-| LingBot-World | 笔记 | [analysis_LingBot_World.md](../../03_papers/lingbot/analysis_LingBot_World.md) | 推进开源世界模型（项目站，无 arXiv） |
-| LingBot-VA | 笔记 | [analysis_LingBot_VA.md](../../03_papers/lingbot/analysis_LingBot_VA.md) | 因果世界建模用于机器人控制（arXiv 待核验） |
-| DreamVLA | 索引 | [INDEX.md](../../03_papers/dreamvla/INDEX.md) | 综合世界知识预测 + 逆动力学闭环（2507.04447v3） |
-| TriVLA | 索引 | [INDEX.md](../../03_papers/trivla/INDEX.md) | 三系统 + 情景世界模型，~36Hz（2507.01424v3） |
-| Foresight | 笔记 | [D6 笔记](../../03_papers/d6_failure_detection/D6-Foresight-Failure-Detection-for-Long-Horizon-阅读笔记.md) | 世界模型潜变量做长时程失败监测（2606.23085v1） |
-| X-VLA | 笔记 | [X-VLA 阅读笔记](../../03_papers/x_vla/X-VLA_阅读笔记.md) | Soft-Prompt 跨具身，0.04% 参数吸收异构性（2510.10274v1） |
-| Qwen-VLA | 笔记 | [analysis_Qwen_VLA.md](../../03_papers/lingbot/analysis_Qwen_VLA.md) | 跨任务/环境/实体统一 VLA（2605.30280v1） |
-| LingBot-VLA | 笔记 | [analysis_LingBot_VLA.md](../../03_papers/lingbot/analysis_LingBot_VLA.md) | 务实 VLA，9 种双臂具身（2601.18692v2） |
-| VLA_Aerial | 索引 | [INDEX.md](../../03_papers/vla_aerial/INDEX.md) | 飞行具身 VLA（arXiv 待核验） |
+| LingBot-World | 笔记 | [analysis_LingBot_World.md](../../../docs/03_papers/lingbot/analysis_LingBot_World.md) | 推进开源世界模型（项目站，无 arXiv） |
+| LingBot-VA | 笔记 | [analysis_LingBot_VA.md](../../../docs/03_papers/lingbot/analysis_LingBot_VA.md) | 因果世界建模用于机器人控制（arXiv 待核验） |
+| DreamVLA | 索引 | [INDEX.md](../../../docs/03_papers/dreamvla/INDEX.md) | 综合世界知识预测 + 逆动力学闭环（2507.04447v3） |
+| TriVLA | 索引 | [INDEX.md](../../../docs/03_papers/trivla/INDEX.md) | 三系统 + 情景世界模型，~36Hz（2507.01424v3） |
+| Foresight | 笔记 | [D6 笔记](../../../docs/03_papers/d6_failure_detection/D6-Foresight-Failure-Detection-for-Long-Horizon-阅读笔记.md) | 世界模型潜变量做长时程失败监测（2606.23085v1） |
+| X-VLA | 笔记 | [X-VLA 阅读笔记](../../../docs/03_papers/x_vla/X-VLA_阅读笔记.md) | Soft-Prompt 跨具身，0.04% 参数吸收异构性（2510.10274v1） |
+| Qwen-VLA | 笔记 | [analysis_Qwen_VLA.md](../../../docs/03_papers/lingbot/analysis_Qwen_VLA.md) | 跨任务/环境/实体统一 VLA（2605.30280v1） |
+| LingBot-VLA | 笔记 | [analysis_LingBot_VLA.md](../../../docs/03_papers/lingbot/analysis_LingBot_VLA.md) | 务实 VLA，9 种双臂具身（2601.18692v2） |
+| VLA_Aerial | 索引 | [INDEX.md](../../../docs/03_papers/vla_aerial/INDEX.md) | 飞行具身 VLA（arXiv 待核验） |
 
 ## 4. 横向比较（综合判断，[综合]）
 
