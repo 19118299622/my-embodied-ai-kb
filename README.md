@@ -8,7 +8,11 @@
 
 当前主要知识入口：
 
-### Embodied AI（V1 legacy，渐进迁移中）
+### Embodied AI
+
+- [Robot Data → Data Quality（V2 已迁移主干）](./kb/embodied-ai/robot-data/data-quality/实机机器人数据质量评估总览.md)
+
+### Embodied AI legacy（渐进迁移中）
 
 - [具身智能研究地图](./docs/RESEARCH_MAP.md)
 

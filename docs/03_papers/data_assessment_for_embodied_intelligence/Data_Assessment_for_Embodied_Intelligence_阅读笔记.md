@@ -12,7 +12,7 @@ tags:
 - 资源核验日期：2026-07-31
 - 上级索引：[论文笔记索引](../README.md)
 - 研究地图：[具身智能研究地图](../../RESEARCH_MAP.md)
-- 关联专题：[实机机器人数据质量评估总览](../embodied_data_quality/实机机器人数据质量评估总览.md)
+- 关联专题：[实机机器人数据质量评估总览](../../../kb/embodied-ai/robot-data/data-quality/实机机器人数据质量评估总览.md)
 ## 1. 基本信息
 
 - 论文：Data Assessment for Embodied Intelligence
@@ -30,7 +30,7 @@ tags:
 
 # 阅读笔记：Data Assessment for Embodied Intelligence
 
-> 论文：[DataAssessmentforEmbodiedIntelligence.pdf](DataAssessmentforEmbodiedIntelligence.pdf)  
+> 论文：[Data Assessment for Embodied Intelligence.pdf](Data%20Assessment%20for%20Embodied%20Intelligence.pdf)<br>
 > 阅读阶段：方法与实验的结构化拆解  
 > 调研定位：数据集级的多样性与可学习性评估，不是逐轨迹／逐时间步的坏数据检测方法。
 
