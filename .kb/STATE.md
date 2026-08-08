@@ -9,6 +9,7 @@
 
 ## 当前阶段
 
+- **V2 Canonical Knowledge Migration Phase 1 正在进行**：本阶段先迁移具身智能 → Robot Data → Data Quality 主干；本 PR 已开始迁移其核心专题文档。
 - **V2 MVP Repository Surface Cleanup 已完成**：人类阅读面与 Agent 内部控制面已分离。
 - 已验证两条 MVP 能力链：
   - Living Document：V1 → V2 真实迁移；
@@ -41,5 +42,6 @@
 
 ## 当前迁移重点
 
-- **V1 使用时迁移**：`docs/` 为 V1 legacy 知识，仅在被真实引用或用户明确要求时才迁入新结构；不强制全量迁移。
-- 强化学习基础双文档已完成 V1 → V2 真实迁移；其余 `docs/` 内容继续遵循「使用时迁移」原则。
+- **分批主干迁移**：用户已明确确认先迁移 Data Quality 主树；本阶段仅处理可可靠归入该 Topic 的核心专题文档，不进行 V1 全量迁移。
+- 已迁移的 Data Quality 主题文档进入 `kb/embodied-ai/robot-data/data-quality/`；相关 V1 论文笔记暂留 `docs/03_papers/`，等待 Source registry 与 PDF 边界单独处理。
+- 强化学习基础双文档已完成 V1 → V2 真实迁移；未进入本阶段范围的 `docs/` 内容继续遵循「使用时迁移」原则。

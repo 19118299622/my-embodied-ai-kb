@@ -53,7 +53,7 @@ flowchart LR
 
 当前专题：
 
-- [实机机器人数据质量评估总览](./02_topics/embodied_data_quality/实机机器人数据质量评估总览.md)
+- [实机机器人数据质量评估总览](../kb/embodied-ai/robot-data/data-quality/实机机器人数据质量评估总览.md)
 
 计划专题：
 
