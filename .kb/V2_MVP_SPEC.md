@@ -16,7 +16,7 @@ tags:
 >
 > 本文档是 **V2 的当前权威需求基线**。
 >
-> 早期完整架构探索 [`V2_ARCHITECTURE_PROPOSAL.md`](./V2_ARCHITECTURE_PROPOSAL.md)、[`V1_TO_V2_MAPPING.md`](./V1_TO_V2_MAPPING.md)、[`MIGRATION_PLAN_V2.md`](./MIGRATION_PLAN_V2.md) 属于「未来参考」，若与本文冲突，**一律以本文为准**。
+> 早期完整架构探索 [`.kb/history/V2_ARCHITECTURE_PROPOSAL.md`](./history/V2_ARCHITECTURE_PROPOSAL.md)、[`.kb/history/V1_TO_V2_MAPPING.md`](./history/V1_TO_V2_MAPPING.md)、[`.kb/history/MIGRATION_PLAN_V2.md`](./history/MIGRATION_PLAN_V2.md) 属于「未来参考」，若与本文冲突，**一律以本文为准**。
 >
 > 本文只固化**需求与边界**，不规定实现细节；本轮不创建任何实际仓库结构、协议文件或脚本（见 §13、§14）。
 
@@ -35,7 +35,7 @@ tags:
 - [9. `_map.md` 认知结构约束](#9-_mapmd-认知结构约束)
 - [10. Relation MVP](#10-relation-mvp)
 - [11. 主要找回机制](#11-主要找回机制)
-- [12. 根目录协议栈](#12-根目录协议栈)
+- [12. 仓库协议栈与人类入口](#12-仓库协议栈与人类入口)
 - [13. Markdown 写作规则继承](#13-markdown-写作规则继承)
 - [14. Nightly 机制](#14-nightly-机制)
 - [15. MVP 明确不实现的能力](#15-mvp-明确不实现的能力)
@@ -46,7 +46,7 @@ tags:
 
 ## 1. 背景与本轮范围
 
-现有 [`V1_INVENTORY.md`](./V1_INVENTORY.md)、[`V2_ARCHITECTURE_PROPOSAL.md`](./V2_ARCHITECTURE_PROPOSAL.md)、[`V1_TO_V2_MAPPING.md`](./V1_TO_V2_MAPPING.md)、[`MIGRATION_PLAN_V2.md`](./MIGRATION_PLAN_V2.md) 是一次**完整但明显偏重**的架构探索。经过重新需求对齐，正式目标已收敛为一个 **Agent-first、Git-native、面向长期个人技术知识沉淀的轻量 V2 MVP**：
+现有 [`.kb/history/V1_INVENTORY.md`](./history/V1_INVENTORY.md)、[`.kb/history/V2_ARCHITECTURE_PROPOSAL.md`](./history/V2_ARCHITECTURE_PROPOSAL.md)、[`.kb/history/V1_TO_V2_MAPPING.md`](./history/V1_TO_V2_MAPPING.md)、[`.kb/history/MIGRATION_PLAN_V2.md`](./history/MIGRATION_PLAN_V2.md) 是一次**完整但明显偏重**的架构探索。经过重新需求对齐，正式目标已收敛为一个 **Agent-first、Git-native、面向长期个人技术知识沉淀的轻量 V2 MVP**：
 
 - **不做**数据库、向量库、Web UI、复杂 schema、通用 sidecar、复杂身份/状态/审查系统；
 - **只做**基于 Git 与 Markdown 的、由 Agent 按仓库自身协议维护的知识沉淀循环；
@@ -222,20 +222,20 @@ Relation MVP **只使用 Markdown 的「相关知识 / 相关主题」段落及�
 
 ---
 
-## 12. 根目录协议栈
+## 12. 仓库协议栈与人类入口
 
-根目录协议栈定义为六个文件，各司其职：
+仓库把人类阅读入口与 Agent 控制面分开；根目录保留 `README.md` 与 `AGENTS.md`，其余协议文件集中在隐藏目录 `.kb/`：
 
 | 文件 | 职责 |
 |---|---|
 | `README.md` | **人类 HOME**：项目入口、当前重点、目录导航 |
 | `AGENTS.md` | **Agent 持久行为边界**：仅负责持久的行为边界、权限红线与 Git 安全约束；**不含写作规范**（写作规范归 `WRITING_RULES.md`）。该边界持久 / 稳定，但**经用户确认可演化** |
-| `DECISIONS.md` | **已确认长期选择**：记录经过确认的方向性/架构性决策（持久 / 稳定，经用户确认可演化） |
-| `WORKFLOW.md` | **每次 inbox curation 动作**：定义白天投放 → 夜间策展的具体步骤 |
-| `WRITING_RULES.md` | **正式文档输出规范入口**：写作规则的唯一权威真源。当前 `README.md` / `AGENTS.md` 中的写作约定**仅作为未来建立本文件时的迁移来源**，不得继续作为并列规范真源 |
-| `STATE.md` | **仅保存轻量当前状态**：当前阶段、活跃主题、持续维护文档、当前迁移重点 |
+| `.kb/DECISIONS.md` | **已确认长期选择**：记录经过确认的方向性/架构性决策（持久 / 稳定，经用户确认可演化） |
+| `.kb/WORKFLOW.md` | **每次 inbox curation 动作**：定义白天投放 → 夜间策展的具体步骤 |
+| `.kb/WRITING_RULES.md` | **正式文档输出规范入口**：写作规则的唯一权威真源。当前 `README.md` / `AGENTS.md` 中的写作约定**仅作为未来建立本文件时的迁移来源**，不得继续作为并列规范真源 |
+| `.kb/STATE.md` | **仅保存轻量当前状态**：当前阶段、活跃主题、持续维护文档、当前迁移重点 |
 
-`STATE.md` 只承载**易变、轻量**的当前状态，不存放长期规则或知识正文。
+`.kb/STATE.md` 只承载**易变、轻量**的当前状态，不存放长期规则或知识正文。
 
 ---
 
@@ -248,7 +248,7 @@ Markdown 写作规则的**正式权威真源为 `WRITING_RULES.md`**（协议栈
 - **长文档**：按既有规范维护目录与导航；
 - **结论强度标记**：按语义使用 `[PAPER]`（论文作者报告）/ `[RESULT]`（已有结果）/ `[INFERENCE]`（推断）/ `[OPEN]`（开放/未验证），**而非机械地逐段添加**。
 
-`WRITING_RULES.md` 的关键约束（写入该文件时的要求）：
+`.kb/WRITING_RULES.md` 的关键约束（写入该文件时的要求）：
 
 - **按文档语义 / `kind` / 本次任务选择性应用**；
 - **不得机械套模板**；
@@ -259,9 +259,9 @@ Markdown 写作规则的**正式权威真源为 `WRITING_RULES.md`**（协议栈
 
 ## 14. Nightly 机制
 
-- Nightly 由**外部 Agent 定时任务**触发，仓库**只提供 workflow**（即 `WORKFLOW.md` 中定义的可执行步骤），不内置复杂调度或状态机。
+- Nightly 由**外部 Agent 定时任务**触发，仓库**只提供 workflow**（即 `.kb/WORKFLOW.md` 中定义的可执行步骤），不内置复杂调度或状态机。
 - 最终的触发 Prompt 应能缩短为：
-  > 「按仓库 `AGENTS.md` / `WORKFLOW.md` 执行 nightly knowledge curation」
+  > 「按仓库 `AGENTS.md` / `.kb/WORKFLOW.md` 执行 nightly knowledge curation」
 - Agent 可以在 **nightly branch** 上提交（commit）本次策展结果；
 - **第一版绝不自动 merge main**：nightly 分支只作为待用户审阅的工作分支，合并动作由用户执行。
 
@@ -270,19 +270,19 @@ Markdown 写作规则的**正式权威真源为 `WRITING_RULES.md`**（协议栈
 每次 nightly 触发时，Agent 按以下顺序读取协议栈：
 
 1. `AGENTS.md`（行为边界、权限红线、Git 安全约束）；
-2. `STATE.md`（当前阶段、活跃主题、持续维护文档、迁移重点）；
-3. `DECISIONS.md`（已确认长期选择）；
-4. `WORKFLOW.md`（本次 inbox curation 动作步骤）；
+2. `.kb/STATE.md`（当前阶段、活跃主题、持续维护文档、迁移重点）；
+3. `.kb/DECISIONS.md`（已确认长期选择）；
+4. `.kb/WORKFLOW.md`（本次 inbox curation 动作步骤）；
 5. 扫描 `inbox/`；
-6. 根据实际任务**按需读取** `WRITING_RULES.md`（文档输出规范）。
+6. 根据实际任务**按需读取** `.kb/WRITING_RULES.md`（文档输出规范）。
 
 ### 14.2 规则冲突优先级
 
 当不同协议文件出现冲突时，按以下优先级裁定（从高到低）：
 
-> **用户本次明确指令 > `AGENTS.md` > `DECISIONS.md` > `WORKFLOW.md` > `WRITING_RULES.md` > `STATE.md` 的运行时上下文**
+> **用户本次明确指令 > `AGENTS.md` > `.kb/DECISIONS.md` > `.kb/WORKFLOW.md` > `.kb/WRITING_RULES.md` > `.kb/STATE.md` 的运行时上下文**
 
-- `STATE.md` 仅提供**运行时上下文**（当前阶段 / 主题 / 重点），**绝不能覆盖更高层的安全规则**（尤其 `AGENTS.md` 的权限红线与 Git 安全约束）。
+- `.kb/STATE.md` 仅提供**运行时上下文**（当前阶段 / 主题 / 重点），**绝不能覆盖更高层的安全规则**（尤其 `AGENTS.md` 的权限红线与 Git 安全约束）。
 - 用户在当次聊天中的明确指令优先级最高。
 
 ---
@@ -315,10 +315,10 @@ Markdown 写作规则的**正式权威真源为 `WRITING_RULES.md`**（协议栈
 
 | 文件 | 当前定位 |
 |---|---|
-| `V1_INVENTORY.md` | **事实审计基线**，保持不变，不因其后 MVP 而修改事实内容 |
-| `V2_ARCHITECTURE_PROPOSAL.md` | 早期完整架构探索 / 未来参考；冲突以本文为准 |
-| `V1_TO_V2_MAPPING.md` | 早期完整架构映射 / 未来参考；冲突以本文为准 |
-| `MIGRATION_PLAN_V2.md` | 早期完整架构迁移计划；其 **M0–M7 为 superseded implementation proposal**，不再作为当前 roadmap |
+| `.kb/history/V1_INVENTORY.md` | **事实审计基线**，保持不变，不因其后 MVP 而修改事实内容 |
+| `.kb/history/V2_ARCHITECTURE_PROPOSAL.md` | 早期完整架构探索 / 未来参考；冲突以本文为准 |
+| `.kb/history/V1_TO_V2_MAPPING.md` | 早期完整架构映射 / 未来参考；冲突以本文为准 |
+| `.kb/history/MIGRATION_PLAN_V2.md` | 早期完整架构迁移计划；其 **M0–M7 为 superseded implementation proposal**，不再作为当前 roadmap |
 
 本文是需求基线，**不要求**为迎合它而改写上述三篇历史设计正文——它们保留架构探索价值与决策演化证据。
 

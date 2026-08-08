@@ -1,8 +1,10 @@
 # AGENTS.md — V2 Agent 持久行为宪法
 
 > 本文件是 Agent 在 `my-embodied-ai-kb` 中的**持久行为边界、权限红线与 Git 安全约束**。
-> 它**不包含写作规范**（写作规范归 [`WRITING_RULES.md`](./WRITING_RULES.md)），也不包含每次策展的步骤（归 [`WORKFLOW.md`](./WORKFLOW.md)）。
-> 本边界持久、稳定，但经用户明确确认可演化。任何与 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) 冲突处，以该需求基线为准；旧架构探索文档（[`V2_ARCHITECTURE_PROPOSAL.md`](./V2_ARCHITECTURE_PROPOSAL.md) 等）仅作历史参考。
+> 它**不包含写作规范**（写作规范归 [`.kb/WRITING_RULES.md`](./.kb/WRITING_RULES.md)），也不包含每次策展的步骤（归 [`.kb/WORKFLOW.md`](./.kb/WORKFLOW.md)）。
+> 本边界持久、稳定，但经用户明确确认可演化。任何与 [`.kb/V2_MVP_SPEC.md`](./.kb/V2_MVP_SPEC.md) 冲突处，以该需求基线为准；旧架构探索文档（[`.kb/history/V2_ARCHITECTURE_PROPOSAL.md`](./.kb/history/V2_ARCHITECTURE_PROPOSAL.md) 等）仅作历史参考。
+
+> **Bootstrap**：根 `AGENTS.md` 是 Agent 自动发现入口；其余控制面文件位于隐藏目录 `.kb/`。读取顺序为 `AGENTS.md` → `.kb/STATE.md` → `.kb/DECISIONS.md` → `.kb/WORKFLOW.md` → 扫描 `inbox/` → 按需读取 `.kb/WRITING_RULES.md`。Repository itself remains the protocol。
 
 ## 1. 角色
 
@@ -14,7 +16,7 @@
 
 ## 2. 开始任务前
 
-开始一次 curation 前，按 [`WORKFLOW.md`](./WORKFLOW.md) 定义的读取顺序加载协议栈并扫描 `inbox/`。不要在未了解当前目录结构与已有文档的情况下直接生成大量内容。
+开始一次 curation 前，按 [`.kb/WORKFLOW.md`](./.kb/WORKFLOW.md) 定义的读取顺序加载协议栈并扫描 `inbox/`。不要在未了解当前目录结构与已有文档的情况下直接生成大量内容。
 
 ## 3. 权限边界（允许）
 
@@ -24,7 +26,7 @@
 - **稳定 ID 识别与登记**：为知识文档分配 / 识别稳定 `id`（Front Matter 字段，非重型身份体系）；
 - **明确关系链接**：对已经明确存在的重要关系，补充带自然语言说明的双向链接；
 - **Source 登记**：读取 / 解析 Source（如从 PDF 抽取标题、作者、arXiv / DOI、版本号），登记到 `sources/papers.yaml`；
-- **受约束的 paper-summary**：仅对符合 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) §8 条件的论文生成，并标记 `Agent-generated` / `user-unverified`；
+- **受约束的 paper-summary**：仅对符合 [`.kb/V2_MVP_SPEC.md`](./.kb/V2_MVP_SPEC.md) §8 条件的论文生成，并标记 `Agent-generated` / `user-unverified`；
 - **已有 `_map.md` 的事实型维护**：补齐导航、横向链接、代表工作等低风险内容；
 - **安全 Living Document 更新**：在既有知识文档上做受约束的增量更新（补写 / 修订，而非整篇重写）；
 - **普通 Git commit**：在 nightly 分支提交本次策展结果，并在聊天中报告。
@@ -54,7 +56,7 @@
 
 除非用户明确要求，否则：
 
-- 不执行 `git commit` 之外的推送 / 分支写操作——具体见 [`WORKFLOW.md`](./WORKFLOW.md)；
+- 不执行 `git commit` 之外的推送 / 分支写操作——具体见 [`.kb/WORKFLOW.md`](./.kb/WORKFLOW.md)；
 - 不执行 `git push` 到 `main`、**不自动 merge / 合并任何分支**；
 - 不创建或删除远程分支；
 - 不执行 `reset --hard`、`clean -fd`、强制推送等破坏性操作；
@@ -73,6 +75,6 @@
 
 当协议文件之间出现冲突时，按以下优先级裁定（从高到低）：
 
-> **用户本次明确指令 > 本文件（AGENTS.md） > [`DECISIONS.md`](./DECISIONS.md) > [`WORKFLOW.md`](./WORKFLOW.md) > [`WRITING_RULES.md`](./WRITING_RULES.md) > [`STATE.md`](./STATE.md) 的运行时上下文**
+> **用户本次明确指令 > 本文件（AGENTS.md） > [`.kb/DECISIONS.md`](./.kb/DECISIONS.md) > [`.kb/WORKFLOW.md`](./.kb/WORKFLOW.md) > [`.kb/WRITING_RULES.md`](./.kb/WRITING_RULES.md) > [`.kb/STATE.md`](./.kb/STATE.md) 的运行时上下文**
 
-[`STATE.md`](./STATE.md) 仅提供运行时上下文（当前阶段 / 主题 / 重点），**绝不能覆盖本文件中的权限红线与 Git 安全约束**。
+[`.kb/STATE.md`](./.kb/STATE.md) 仅提供运行时上下文（当前阶段 / 主题 / 重点），**绝不能覆盖本文件中的权限红线与 Git 安全约束**。

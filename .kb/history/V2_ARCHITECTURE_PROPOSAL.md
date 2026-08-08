@@ -14,7 +14,7 @@ tags:
 >
 > **本文档属于早期「完整架构探索」与「未来参考」，不再作为当前实施规格。**
 >
-> 经重新需求对齐，正式目标已收敛为轻量 V2 MVP（Agent-first、Git-native、面向长期个人技术知识沉淀）。**当前权威需求基线为 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md)。**
+> 经重新需求对齐，正式目标已收敛为轻量 V2 MVP（Agent-first、Git-native、面向长期个人技术知识沉淀）。**当前权威需求基线为 [`V2_MVP_SPEC.md`](../V2_MVP_SPEC.md)。**
 >
 > **若本文件与 `V2_MVP_SPEC.md` 内容冲突，一律以 `V2_MVP_SPEC.md` 为准。**
 >

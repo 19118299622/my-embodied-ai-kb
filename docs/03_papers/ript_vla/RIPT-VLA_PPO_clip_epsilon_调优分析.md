@@ -13,7 +13,7 @@ tags:
 
 - 资源核验日期：2026-07-31
 - 上级索引：[论文笔记索引](../README.md)
-- 研究地图：[具身智能研究地图](../../../RESEARCH_MAP.md)
+- 研究地图：[具身智能研究地图](../../RESEARCH_MAP.md)
 - 主笔记：[RIPT-VLA 阅读笔记](./RIPT-VLA_阅读笔记.md)
 - 论文 PDF：[RIPT-VLA_2505.17016v1.pdf](./RIPT-VLA_2505.17016v1.pdf)
 - 相关分析：[GRPO 与 RLOO/DS-LOOP 对比分析](./RIPT-VLA_GRPO_vs_RLOO_对比分析.md)、[Rollout 存储与 On/Off-Policy 问答](./RIPT-VLA_Rollout存储与OnOffPolicy_问答.md)

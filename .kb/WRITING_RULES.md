@@ -1,7 +1,7 @@
 # WRITING_RULES.md — 文档输出规范（唯一权威真源）
 
-> 本文件是仓库写作规范的**唯一权威真源**。`README.md` / `AGENTS.md` 中既有的写作约定仅作为本文件建立前的历史参考，任何冲突以本文件为准（见 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) §12、§13）。
-> 本文件由 Agent 与用户共同遵守；它不是 Agent 行为宪法（那是 [`AGENTS.md`](./AGENTS.md)），也不是每次动作步骤（那是 [`WORKFLOW.md`](./WORKFLOW.md)）。
+> 本文件是仓库写作规范的**唯一权威真源**。`README.md` / `AGENTS.md` 中既有的写作约定仅作为本文件建立前的历史参考，任何冲突以 [`V2_MVP_SPEC.md`](./V2_MVP_SPEC.md) 为准（见 §12、§13）。
+> 本文件由 Agent 与用户共同遵守；它不是 Agent 行为宪法（那是 [`AGENTS.md`](../AGENTS.md)），也不是每次动作步骤（那是 [`WORKFLOW.md`](./WORKFLOW.md)）。
 
 ## 0. 应用原则（最重要）
 
@@ -158,6 +158,6 @@ updated: YYYY-MM-DD
 ## 4. 与协议栈其它文件的关系
 
 - 本文件只管**文档怎么写**；
-- [`AGENTS.md`](./AGENTS.md) 管 Agent 行为边界与 Git 安全（**不含写作规则**）；
+- [`AGENTS.md`](../AGENTS.md) 管 Agent 行为边界与 Git 安全（**不含写作规则**）；
 - [`WORKFLOW.md`](./WORKFLOW.md) 管每次 curation 的动作步骤；
 - [`STATE.md`](./STATE.md) 只提供运行时上下文。

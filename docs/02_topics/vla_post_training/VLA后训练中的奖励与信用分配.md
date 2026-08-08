@@ -112,7 +112,7 @@ tags:
 - 基础：[`../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md`](../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md)（MDP / 策略梯度 / GAE / PPO）
 - RIPT-VLA 主笔记与 3 篇配套：[`../../03_papers/ript_vla/`](../../03_papers/ript_vla/)
 - 实验基线：[`../../04_experiments/PPO_CartPole_可复现实验记录.md`](../../04_experiments/PPO_CartPole_可复现实验记录.md)
-- 研究地图：[`../../../RESEARCH_MAP.md`](../../../RESEARCH_MAP.md) §2.4
+- 研究地图：[`../../RESEARCH_MAP.md`](../../RESEARCH_MAP.md) §2.4
 
 ## 14. 更新记录
 

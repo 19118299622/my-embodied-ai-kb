@@ -12,7 +12,7 @@ tags:
 
 # 迁移清单（Phase 1 详细编目）
 
-> 本文件是「第一阶段：建立迁移清单」的产出，与 [`MIGRATION_BACKLOG.md`](./MIGRATION_BACKLOG.md)（优先级路线图）和 [`RESEARCH_MAP.md`](./RESEARCH_MAP.md)（研究地图）联动。
+> 本文件是「第一阶段：建立迁移清单」的产出，与 [`MIGRATION_BACKLOG.md`](./MIGRATION_BACKLOG.md)（优先级路线图）和 [`RESEARCH_MAP.md`](../../docs/RESEARCH_MAP.md)（研究地图）联动。
 >
 > **本阶段原则**：先不移动或删除原资料，仅为每个候选材料建立记录。处理方式分为：迁移 / 改写 / 仅建索引 / 暂缓 / 排除。
 
