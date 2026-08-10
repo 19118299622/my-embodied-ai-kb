@@ -1,15 +1,10 @@
 ---
+id: embodied-vla-post-training-reward-credit
 title: VLA 后训练中的奖励与信用分配
-type: topic
-status: seed
+kind: topic-note
+domain: embodied-ai
 created: 2026-07-31
-updated: 2026-07-31
-tags:
-  - embodied-ai
-  - vla
-  - reinforcement-learning
-  - post-training
-  - credit-assignment
+updated: 2026-08-08
 ---
 
 # VLA 后训练中的奖励与信用分配
@@ -45,12 +40,12 @@ tags:
 
 ## 4. 代表工作
 
-- **RIPT-VLA**（已迁移，[阅读笔记](../docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)）：VLA 训练「第三阶段」RL 交互式后训练；DS-LOOP；核心洞察「RL 是 SFT 的补集」。
+- **RIPT-VLA**（已迁移，[阅读笔记](../../../../docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)）：VLA 训练「第三阶段」RL 交互式后训练；DS-LOOP；核心洞察「RL 是 SFT 的补集」。
 - **VLA-RL**（arXiv 2505.18719，摘要级）：轨迹级 RL 微调自回归 VLA；过程奖励模型由自动切分的任务段伪标签训练；OpenVLA-7B 在 LIBERO 40 任务 +4.5%，匹配 π0-FAST；观察到测试时扩展（inference scaling）迹象。
 - **ConRFT**（arXiv 2502.05450，摘要级）：离线 BC+Q-learning 提取策略、在线一致性策略（consistency policy）+ 人类介入；8 项真实任务在线 45–90 分钟达 96.3% 成功率。
 - **SimpleVLA-RL**（arXiv 2509.09674，摘要级）：基于 veRL 的高效 RL 框架；OpenVLA-OFT 在 LIBERO SoTA，RoboTwin 1.0&2.0 超过 π0；提出训练中「pushcut」现象（策略发现训练外新模式）；官方代码 `github.com/PRIME-RL/SimpleVLA-RL`。
 - **What Can RL Bring to VLA Generalization?**（arXiv 2505.19789，NeurIPS 2025，摘要级）：系统实证，PPO 微调相比 SFT 显著提升语义理解与执行鲁棒性泛化。
-- **GRPO / RLOO**：组内相对优势估计谱系，详见 [RIPT-VLA GRPO vs RLOO 对比分析](../docs/03_papers/ript_vla/RIPT-VLA_GRPO_vs_RLOO_对比分析.md)。
+- **GRPO / RLOO**：组内相对优势估计谱系，详见 [RIPT-VLA GRPO vs RLOO 对比分析](../../../../docs/03_papers/ript_vla/RIPT-VLA_GRPO_vs_RLOO_对比分析.md)。
 
 ## 5. 横向比较
 
@@ -98,21 +93,21 @@ tags:
 
 1. 在 LIBERO 上复现 RIPT-VLA 的 DS-LOOP，验证 87.5% vs 78.3%（当前为作者报告）；
 2. 扫描 RLOO 组大小 $K$（论文未给，待核实）对长任务成功率的影响；
-3. 用 [`../../04_experiments/PPO_CartPole_可复现实验记录.md`](../../04_experiments/PPO_CartPole_可复现实验记录.md) 的 PPO 基线做 on-policy 偏离消融（$N$ 扫描），外推到 VLA 后训练。
+3. 用 [`../../../../kb/machine-learning/reinforcement-learning/PPO_CartPole_可复现实验记录.md`](../../../../kb/machine-learning/reinforcement-learning/PPO_CartPole_可复现实验记录.md) 的 PPO 基线做 on-policy 偏离消融（$N$ 扫描），外推到 VLA 后训练。
 
 ## 12. 论文、项目和代码索引
 
-- RIPT-VLA：项目主页（GitHub Pages 404，疑似下线）、官方代码 `github.com/Ariostgx/ript-vla`（license=null，无许可证）；见[笔记](../docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)。
+- RIPT-VLA：项目主页（GitHub Pages 404，疑似下线）、官方代码 `github.com/Ariostgx/ript-vla`（license=null，无许可证）；见[笔记](../../../../docs/03_papers/ript_vla/RIPT-VLA_阅读笔记.md)。
 - SimpleVLA-RL：官方代码 `github.com/PRIME-RL/SimpleVLA-RL`。
 - 其余论文 GitHub 待深读核验（arXiv 2502.05450 / 2505.18719 / 2505.19789）。
-- 纯索引见 [`../../03_papers/rl_and_vla/INDEX.md`](../../03_papers/rl_and_vla/INDEX.md) 与 [`../../03_papers/simplevla_rl/INDEX.md`](../../03_papers/simplevla_rl/INDEX.md)（PDF 不纳入 git）。
+- 纯索引见 [`../../../../docs/03_papers/rl_and_vla/INDEX.md`](../../../../docs/03_papers/rl_and_vla/INDEX.md) 与 [`../../../../docs/03_papers/simplevla_rl/INDEX.md`](../../../../docs/03_papers/simplevla_rl/INDEX.md)（PDF 不纳入 git）。
 
 ## 13. 关联文档
 
-- 基础：[`../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md`](../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md)（MDP / 策略梯度 / GAE / PPO）
-- RIPT-VLA 主笔记与 3 篇配套：[`../../03_papers/ript_vla/`](../../03_papers/ript_vla/)
-- 实验基线：[`../../04_experiments/PPO_CartPole_可复现实验记录.md`](../../04_experiments/PPO_CartPole_可复现实验记录.md)
-- 研究地图：[`../../RESEARCH_MAP.md`](../../RESEARCH_MAP.md) §2.4
+- 基础：[`../../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md`](../../../../kb/machine-learning/reinforcement-learning/长期学习笔记.md)（MDP / 策略梯度 / GAE / PPO）
+- RIPT-VLA 主笔记与 3 篇配套：[`../../../../docs/03_papers/ript_vla/`](../../../../docs/03_papers/ript_vla/)
+- 实验基线：[`../../../../kb/machine-learning/reinforcement-learning/PPO_CartPole_可复现实验记录.md`](../../../../kb/machine-learning/reinforcement-learning/PPO_CartPole_可复现实验记录.md)
+- 研究地图：[`../../../../docs/RESEARCH_MAP.md`](../../../../docs/RESEARCH_MAP.md) §2.4
 
 ## 14. 更新记录
 

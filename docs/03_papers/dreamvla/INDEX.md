@@ -30,4 +30,4 @@ tags:
 ## 结论强度说明
 
 - 以上来自 arXiv 摘要与公开资料，属**作者报告 / 公开资料**，知识库尚未独立复现。
-- 与 [LingBot-World](../lingbot/analysis_LingBot_World.md)、[LingBot-VA](../lingbot/analysis_LingBot_VA.md)、[TriVLA](../trivla/INDEX.md) 同属"世界模型 / 世界知识增强 VLA"脉络，详见 [`docs/02_topics/world_model/`](../../02_topics/world_model/)。
+- 与 [LingBot-World](../lingbot/analysis_LingBot_World.md)、[LingBot-VA](../lingbot/analysis_LingBot_VA.md)、[TriVLA](../trivla/INDEX.md) 同属"世界模型 / 世界知识增强 VLA"脉络，详见 [`kb/embodied-ai/world-model/`](../../../kb/embodied-ai/world-model/)。

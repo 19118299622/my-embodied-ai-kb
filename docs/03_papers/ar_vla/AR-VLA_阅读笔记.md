@@ -83,7 +83,7 @@ AR-VLA 用一个独立的**自回归动作专家（Autoregressive Action Expert�
 
 - 对比 OpenVLA / RT-2 / π0-FAST 的「伪自回归（块内自回归、跨块重置）」。
 - 借鉴 π0.5 的 Knowledge Insulation 思想。
-- 与本研究动作块专题（[`动作块与流匹配动作生成`](../02_topics/action_chunk_flow_matching/动作块与流匹配动作生成.md)）形成对照：动作块抑制误差但块内开环；AR-VLA 用 KV cache 维持历史但引入 OOD 累积风险。
+- 与本研究动作块专题（[`动作块与流匹配动作生成`](../../../kb/embodied-ai/vla/foundations/动作块与流匹配动作生成.md)）形成对照：动作块抑制误差但块内开环；AR-VLA 用 KV cache 维持历史但引入 OOD 累积风险。
 
 ## 11. 局限与失败模式
 
